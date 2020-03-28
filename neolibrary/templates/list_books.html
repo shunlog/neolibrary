@@ -1,0 +1,25 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="content-section">
+  <form method="POST" action="" enctype="multipart/form-data">
+      {% for book in books %}
+      <div class="form-check custom-control custom-checkbox">
+          <input class="form-check-input custom-control-input"
+                 name="book"
+                 id="{{book.get_id()}}"
+                 type="checkbox"
+                 value="{{book.get_id()}}">
+          <label class="form-check-label custom-control-label" for="{{book.get_id()}}">
+              {{ book.title }}
+          </label>
+          <span class="float-right">
+              {% for a in book.authors %}
+              {{ a.name }},
+              {% endfor %}
+          </span>
+      </div>
+      {% endfor %}
+      <input type="submit" value="Delete selected books">
+  </form>
+</div>
+{% endblock content %}

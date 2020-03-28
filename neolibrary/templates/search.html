@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<div class="input-group">
+  <input type="text" class="form-control" aria-label="Text input with segmented dropdown button">
+  <div class="input-group-append">
+    <form action="{{ url_for('search.search', book_id=book_id, action='add_like') }}" method="POST">
+      <button type="button" class="btn btn-outline-secondary">Search</button>
+      <button type="button" class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <span class="sr-only">Toggle Dropdown</span>
+      </button>
+      <div class="dropdown-menu">
+        <a class="dropdown-item" href="#">Books</a>
+        <a class="dropdown-item" href="#">Authors</a>
+        <a class="dropdown-item" href="#">Tags</a>
+      </div>
+    </form>
+  </div>
+</div>
+
+{% endblock content %}
+

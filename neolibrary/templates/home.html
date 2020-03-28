@@ -1,0 +1,44 @@
+{% extends "layout.html" %}
+{%block content %}
+
+<div class="row">
+  {% for book in books %}
+
+  <div class="col-xl-3 col-md-4 col-sm-6">
+    <div class="card d-100 d-flex" >
+      <div class="row no-gutters">
+
+        <div class="col-sm-12">
+          <a href="{{ url_for('books.book', book_id=book.get_id()) }}" class="card-title">
+            {% if book.image_file %}
+            <img src="{{ image_folder + book.image_file }}"
+                 class="img-fluid mx-auto d-block card-img-top"
+                 alt="Image is not available">
+            {% else %}
+            <img src="{{ image_folder + 'default.png' }}"
+                 class="img-fluid card-img-top"
+                 alt="Image is not available">
+            {% endif %}
+          </a>
+
+        </div>
+        
+        <div class="col-md-12">
+          <div class="card-body">
+            <a href="{{ url_for('books.book', book_id=book.get_id()) }}" class="card-title"><h5 >{{ book.title }}</h5></a>
+            <p class="card-text">By 
+              {% for author in book.authors %}
+              <a href="{{ url_for('authors.author', author_id=author.get_id()) }}">{{ author.name }}</a>
+              {% endfor %}
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  {% endfor%}
+</div>
+
+{% endblock content %}
