@@ -6,7 +6,7 @@ from neolibrary import app, graph, book_covers
 from neolibrary.main.utils import sidebar
 from neolibrary.books.forms import BookForm
 from neolibrary.models import Book, Author 
-from neolibrary.books.utils import match_node, match_list_of_nodes, save_book_cover, download_book_cover, delete_book_cover
+from neolibrary.books.utils import match_book, match_list_of_books, save_book_cover, download_book_cover, delete_book_cover
 
 books = Blueprint('books', __name__)
 
@@ -21,12 +21,12 @@ def new_book():
             picture_file = save_book_cover(form.picture.data)
         elif form.link.data:
             picture_file = download_book_cover(form.link.data)
-            if picture_file == "error":
+            if not picture_file:
                 form.link.errors.append("Error requesting file")
                 return render_template('create_book.html', title='New Book',
                                        form=form, legend='New Book', image_folder=book_covers, sidebar=sidebar())
 
-        book = match_node("create (b:Book) return b", 'b')
+        book = match_book("create (b:Book) return b", 'b')
         if not book:
             flash('The book couldn\'t be created!', 'danger')
             return redirect(url_for('books.new_book'))
@@ -111,7 +111,7 @@ def update_book(book_id):
         return render_template('create_book.html', title='Update Book',
                                form=form, legend='Update Book', sidebar=sidebar())
     elif not book:
-        return render_template('no_such_book.html', sidebar=sidebar())
+        return render_template('no_such_item.html', item=book)
 
 @books.route("/book/<int:book_id>/delete", methods=['POST'])
 @login_required

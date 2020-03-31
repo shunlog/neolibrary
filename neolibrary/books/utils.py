@@ -8,7 +8,7 @@ from neolibrary import book_covers
 from neolibrary.models import Book 
 
 
-def match_node(query, node):
+def match_book(query, node):
     try:
         dt = graph.run(query).data()
         node = dt[0][node]
@@ -17,7 +17,7 @@ def match_node(query, node):
     except:
         print("Error running query!")
 
-def match_list_of_nodes(query, name):
+def match_list_of_books(query, name):
     ls = []
     try:
         dt = graph.run(query).data()
@@ -64,6 +64,8 @@ def download_book_cover(url):
     global book_covers
     f_ext = "."+url.split(".")[-1]
     print("Extension: ", f_ext)
+    if f_ext not in ["png","jpg","jpeg"]:
+        return None
     random_hex = secrets.token_hex(8)
     picture_fn = random_hex + f_ext
     picture_path = os.path.join(current_app.root_path, book_covers, picture_fn)
@@ -71,7 +73,7 @@ def download_book_cover(url):
     try:
         urllib.request.urlretrieve (url, picture_path)
     except:
-        return "error"
+        return None
 
     image = Image.open(picture_path)
     w, h = image.size
