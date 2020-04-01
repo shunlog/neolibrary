@@ -19,11 +19,9 @@ class RegistrationForm(FlaskForm):
     submit = SubmitField('Sign Up')
 
     def validate_username(self, username):
-        user = User()
-        ls = list( User.match(graph).where("_.username =~ '{}'"
-                                           .format(username.data)))
-        print(username,':',ls)
-        if len(ls) != 0:
+        usr =  User.match(graph, username.data).first()
+        print(usr)
+        if usr:
             raise ValidationError('This username is already taken')
 
     def validate_email(self, email):

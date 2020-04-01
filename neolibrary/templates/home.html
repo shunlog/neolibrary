@@ -25,7 +25,9 @@
         
         <div class="col-md-12">
           <div class="card-body">
-            <a href="{{ url_for('books.book', book_id=book.get_id()) }}" class="card-title"><h5 >{{ book.title }}</h5></a>
+            <a href="{{ url_for('books.book', book_id=book.get_id()) }}" class="card-title">
+              <h5 >{{ book.title }}</h5>
+            </a>
             <p class="card-text">By 
               {% for author in book.authors %}
               <a href="{{ url_for('authors.author', author_id=author.get_id()) }}">{{ author.name }}</a>
