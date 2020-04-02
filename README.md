@@ -10,6 +10,13 @@ pip install git+https://github.com/technige/py2neo.git#egg=py2neo
 
 ### Backup
 
+#### With scripts:
+```
+./backup
+./restore
+```
+
+#### Manually:
 Cd to ~/.config/Neo4j\ Desktop/Application/neo4jDatabases/.../inst../bin
 
 Backup with:
