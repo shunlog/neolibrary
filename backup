@@ -1,0 +1,4 @@
+#!/bin/bash
+~/.config/Neo4j\ Desktop/Application/neo4jDatabases/database-f07e4b6e-ddee-4f4b-bc96-8b7a02710c78/installation-4.0.1/bin/neo4j-admin backup --backup-dir=/home/awh/backups/library_db --database=neo4j --pagecache=4G
+rsync -r -zvh --delete neolibrary/static/profile_pics ~/backups/library_flask/
+rsync -r -zvh --delete neolibrary/static/book_covers ~/backups/library_flask/
