@@ -6,6 +6,8 @@ test.py
 
 *.pyc
 __pycache__/
+*.*.swp
+*.swp
 
 instance/
 

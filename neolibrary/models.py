@@ -2,24 +2,40 @@ from datetime import datetime
 from neolibrary import graph, login_manager
 from py2neo.ogm import GraphObject, Property, RelatedFrom, RelatedTo
 from flask_login import UserMixin
+from itertools import groupby
 
 @login_manager.user_loader
 def load_user(username):
     return User.match(graph).where(username=username).first()
 
+def __count__(obj):
+    return graph.run("match(n:"+obj+") return count(n)").evaluate()
 
 class Book(GraphObject):
     __primarykey__ = "title"
+
+    n_limit = 8
+    count = __count__("Book")
+    pages = __count__("Book") // n_limit if __count__("Book") % n_limit == 0 else __count__("Book") // n_limit + 1
+    authors_count = __count__("Author")
+
 
     def get_id(self):
         s = str(self.__node__)
         return s[s.find("_")+1:s.find(":")]
 
-    def count_authors(self):
-        count = 0
-        for a in self.authors:
-            count += 1
-        return count
+    def iter_pages(self,current_page, left_edge=1, right_edge=1, left_current=1, right_current=1):
+        pages = self.pages
+        ls = [i for i in range(1,self.pages+1)]
+        ls2 = [i for i in range(current_page-left_current-1, current_page+right_current)]
+        for i in range(left_edge,pages-right_edge):
+            if i not in ls2:
+                ls[i] = None
+
+        ls = [i[0] for i in groupby(ls)]
+
+        return ls
+
 
     title = Property()
     image_file = Property()
@@ -33,18 +49,13 @@ class Book(GraphObject):
 class Author(GraphObject):
     __primarykey__ = "name"
 
+    name = Property()
+    books = RelatedTo("Book", "WROTE")
+    books_count = __count__("Book")
+
     def get_id(self):
         s = str(self.__node__)
         return s[s.find("_")+1:s.find(":")]
-
-    def count_books(self):
-        count = 0
-        for b in self.books:
-            count += 1
-        return count
-
-    name = Property()
-    books = RelatedTo("Book", "WROTE")
 
 
 class User(GraphObject, UserMixin):
@@ -59,9 +70,9 @@ class User(GraphObject, UserMixin):
     books_liked = RelatedTo(Book, "LIKED")
     books_disliked = RelatedTo(Book, "DISLIKED")
 
-    def get_node_id(self):
+    def get_id(self):
         s = str(self.__node__)
         return s[s.find("_")+1:s.find(":")]
 
-    def get_id(self):
+    def get_username(self):
         return self.username.encode('utf-8')

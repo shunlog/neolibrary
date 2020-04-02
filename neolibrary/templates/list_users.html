@@ -14,11 +14,11 @@
           <div class="form-check custom-control custom-checkbox">
               <input class="form-check-input custom-control-input"
                      name="user"
-                     id="{{user.get_node_id()}}"
+                     id="{{user.get_id()}}"
                      type="checkbox"
-                     value="{{user.get_id()}}">
+                     value="{{user.get_username()}}">
               <label class="form-check-label custom-control-label"
-                     for="{{user.get_node_id()}}">
+                     for="{{user.get_id()}}">
                   {{ user.username }}
               </label>
           </div>
