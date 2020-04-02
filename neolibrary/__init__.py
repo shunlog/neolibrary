@@ -21,10 +21,12 @@ from neolibrary.main.routes import main
 from neolibrary.users.routes import users
 from neolibrary.books.routes import books
 from neolibrary.authors.routes import authors
+from neolibrary.tags.routes import tags
 from neolibrary.search.routes import search_bl
 
 app.register_blueprint(main)
 app.register_blueprint(users)
 app.register_blueprint(books)
 app.register_blueprint(authors)
+app.register_blueprint(tags)
 app.register_blueprint(search_bl)

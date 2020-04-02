@@ -5,7 +5,7 @@ from flask_login import current_user, login_required
 from neolibrary import app, graph, book_covers
 from neolibrary.main.utils import sidebar
 from neolibrary.books.forms import BookForm
-from neolibrary.models import Book, Author 
+from neolibrary.models import Book, Author, Tag
 from neolibrary.books.utils import match_book, match_list_of_books, save_book_cover, download_book_cover, delete_book_cover
 
 books = Blueprint('books', __name__)
@@ -49,6 +49,17 @@ def new_book():
                 book.authors.add(author)
             elif a_name != '':
                 book.authors.add(author)
+        tags_ls=form.tags.data
+        for t_name in tags_ls.split('#'):
+            t_name = t_name.strip()
+            tag = Tag().match(graph, t_name).first()
+            if (not tag) and (t_name != ''):
+                tag = Tag()
+                tag.name = t_name
+                graph.push(tag)
+                book.tags.add(tag)
+            elif t_name != '':
+                book.tags.add(tag)
 
         print(book.__node__)
         graph.push(book)
@@ -98,6 +109,18 @@ def update_book(book_id):
                 book.authors.add(author)
             elif a_name != '':
                 book.authors.add(author)
+        tags_ls=form.tags.data
+
+        for t_name in tags_ls.split('#'):
+            t_name = t_name.strip()
+            tag = Tag().match(graph, t_name).first()
+            if (not tag) and (t_name != ''):
+                tag = Tag()
+                tag.name = t_name
+                graph.push(tag)
+                book.tags.add(tag)
+            elif t_name != '':
+                book.tags.add(tag)
 
         graph.push(book)
         flash('The book has been updated!', 'success')
@@ -108,6 +131,11 @@ def update_book(book_id):
         for a in book.authors:
             authors_ls.append(a.name)
         form.authors.data = ','.join(authors_ls)
+
+        tags_ls = []
+        for t in book.tags:
+            tags_ls.append(t.name)
+        form.tags.data = '#'.join(tags_ls)
         return render_template('create_book.html', title='Update Book',
                                form=form, legend='Update Book', sidebar=sidebar())
     elif not book:
@@ -165,3 +193,4 @@ def list_books():
             return redirect(url_for('books.list_books'))
 
     return render_template('list_books.html', books=books, sidebar=sidebar())
+

@@ -1,0 +1,60 @@
+{% extends "layout.html" %}
+{% block content %}
+<article class="media content-section">
+
+  <div class="media-body">
+    <div class="article-metadata">
+      <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('tags.update_tag', tag_id=tag_id) }}">Update</a>
+      <button type="button" class="btn btn-danger btn-sm m-1" data-toggle="modal" data-target="#deleteModal">Delete</button>
+    </div>
+    <h2 class="article-title">#{{ tag.name }}</h2>
+    <div class="row">
+      {% for book in tag.books %}
+      <div class="col-xl-3 col-sm-6">
+        <div class="card " >
+          <div class="row no-gutters">
+            <div class="col-md-12">
+              {% if book.image_file %}
+              <img src="{{ '../' + image_folder + book.image_file }}"
+                   class="img-fluid mx-auto d-block card-img-top"
+                   alt="Image is not available">
+              {% else %}
+              <img src="{{ '../' + image_folder + 'default.png' }}"
+                   class="img-fluid card-img-top"
+                   alt="Image is not available">
+              {% endif %}
+            </div>
+            <div class="col-md-12">
+              <div class="card-body">
+                <a href="{{ url_for('books.book', book_id=book.get_id()) }}" class="card-title"><h5 >{{ book.title }}</h5></a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endfor%}
+    </div>
+
+    <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('tags.tag', tag_id=tag_id) }}">Like</a>
+  </div>
+</article>
+<!-- Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="deleteModalLabel">Delete tag?</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <form action="{{ url_for('tags.delete_tag', tag_id=tag_id) }}" method="POST">
+          <input class="btn btn-danger" type="submit" value="Delete">
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}

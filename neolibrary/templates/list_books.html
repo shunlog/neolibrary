@@ -21,5 +21,8 @@
       {% endfor %}
       <input type="submit" value="Delete selected books">
   </form>
+  <form method="POST" action="{{ url_for('tags.add_tags', book_id=book_id) }}">
+      <input type="submit" value="Add tags">
+  </form>
 </div>
 {% endblock content %}

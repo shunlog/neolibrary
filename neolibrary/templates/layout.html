@@ -37,14 +37,15 @@
                 <a class="nav-link" href="{{url_for('search.search')}}">Search</a>
               </li>
               <li class="nav-item dropdown">
-                  <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                      List
-                  </a>
-                  <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                      <a class="dropdown-item" href="{{ url_for('authors.list_authors') }}">Authors</a>
-                      <a class="dropdown-item" href="{{ url_for('books.list_books') }}">Books</a>
-                      <a class="dropdown-item" href="{{ url_for('users.list_users') }}">Users</a>
-                  </div>
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  List
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                  <a class="dropdown-item" href="{{ url_for('authors.list_authors') }}">Authors</a>
+                  <a class="dropdown-item" href="{{ url_for('books.list_books') }}">Books</a>
+                  <a class="dropdown-item" href="{{ url_for('users.list_users') }}">Users</a>
+                  <a class="dropdown-item" href="{{ url_for('tags.list_tags') }}">Tags</a>
+                </div>
               </li>
             </ul>
             <ul class="navbar-nav">
@@ -77,46 +78,57 @@
       {% endif %}
 
       <div class="row">
-          {% if sidebar %}
-          <div class="col-md-3">
-              <div class="content-section">
-              <h3>Discover</h3>
-              <p class='text-muted'>Authors:
-                  <ul class="list-group">
-                  {% for author in sidebar['authors'] %}
-                      <li class="list-group-item list-group-item-light">
-                          <a href="{{ url_for('authors.author', author_id=author.get_id()) }}">{{ author.name }}</a>
-                      </li>
-                  {% endfor %}
-                  <li class="list-group-item list-group-item-light"><a href="google.com">more ...</a></li>
-                  </ul>
-              </p>
-              <p class='text-muted'>Books:
-                  <ul class="list-group">
-                  {% for book in sidebar['books'] %}
-                  <li class="list-group-item list-group-item-light">
-                      <a href="{{ url_for('books.book', book_id=book.get_id()) }}">{{ book.title }}</a>
-                  </li>
-                  {% endfor %}
-                      <li class="list-group-item list-group-item-light"><a href="google.com">more ...</a></li>
-                  </ul>
-              </p>
-              </div>
-          </div>
-          {% endif %}
+        {% if sidebar %}
+        <div class="col-md-3">
+          <div class="content-section">
+            <h3>Discover</h3>
 
-          <div {% if sidebar %} class="col-md-9" {% else %} class="col-lg-8" {% endif %} >
-            {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-            {% for category, message in messages %}
-              <div class="alert alert-{{ category }}">
-                {{ message }}
-              </div>
-            {% endfor %}
-            {% endif %}
-            {% endwith %}
-            {% block content %}{% endblock %}
+            <p class='text-muted'>Authors:
+              <ul class="list-group">
+                {% for author in sidebar['authors'] %}
+                <li class="list-group-item list-group-item-light">
+                  <a href="{{ url_for('authors.author', author_id=author.get_id()) }}">{{ author.name }}</a>
+                </li>
+                {% endfor %}
+                <li class="list-group-item list-group-item-light"><a href="google.com">more ...</a></li>
+              </ul>
+            </p>
+            <p class='text-muted'>Books:
+              <ul class="list-group">
+                {% for book in sidebar['books'] %}
+                <li class="list-group-item list-group-item-light">
+                  <a href="{{ url_for('books.book', book_id=book.get_id()) }}">{{ book.title }}</a>
+                </li>
+                {% endfor %}
+                <li class="list-group-item list-group-item-light"><a href="google.com">more ...</a></li>
+              </ul>
+            </p>
+            <p class='text-muted'>Tags:
+              <ul class="list-group">
+                {% for tag in sidebar['tags'] %}
+                <li class="list-group-item list-group-item-light">
+                  <a href="{{ url_for('tags.tag', tag_id=tag.get_id()) }}">{{ tag.name }}</a>
+                </li>
+                {% endfor %}
+                <li class="list-group-item list-group-item-light"><a href="google.com">more ...</a></li>
+              </ul>
+            </p>
           </div>
+        </div>
+        {% endif %}
+
+        <div {% if sidebar %} class="col-md-9" {% else %} class="col-lg-8" {% endif %} >
+          {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+          {% for category, message in messages %}
+          <div class="alert alert-{{ category }}">
+            {{ message }}
+          </div>
+          {% endfor %}
+          {% endif %}
+          {% endwith %}
+          {% block content %}{% endblock %}
+        </div>
 
       </div>
     </main>

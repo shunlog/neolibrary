@@ -9,15 +9,14 @@ def load_user(username):
     return User.match(graph).where(username=username).first()
 
 def __count__(obj):
-    return graph.run("match(n:"+obj+") return count(n)").evaluate()
+    return
 
 class Book(GraphObject):
     __primarykey__ = "title"
 
     n_limit = 8
-    count = __count__("Book")
-    pages = __count__("Book") // n_limit if __count__("Book") % n_limit == 0 else __count__("Book") // n_limit + 1
-    authors_count = __count__("Author")
+    count = graph.run("match(n:Book) return count(n)").evaluate()
+    pages = count // n_limit if count % n_limit == 0 else count // n_limit + 1
 
 
     def get_id(self):
@@ -31,16 +30,14 @@ class Book(GraphObject):
         for i in range(left_edge,pages-right_edge):
             if i not in ls2:
                 ls[i] = None
-
         ls = [i[0] for i in groupby(ls)]
-
         return ls
-
 
     title = Property()
     image_file = Property()
 
     authors = RelatedFrom("Author", "WROTE")
+    tags = RelatedFrom("Tag", "TAGGED")
     users_read = RelatedFrom("User", "READ")
     users_liked = RelatedFrom("User", "LIKED")
     users_disliked = RelatedFrom("User", "DISLIKED")
@@ -51,12 +48,30 @@ class Author(GraphObject):
 
     name = Property()
     books = RelatedTo("Book", "WROTE")
-    books_count = __count__("Book")
+
+    def book_count(self):
+        count = graph.run("match (b:Book)<-[:WROTE]-(a:Author) where a.name='"+
+                          self.name+"' return count(b)").evaluate()
+        return count
 
     def get_id(self):
         s = str(self.__node__)
         return s[s.find("_")+1:s.find(":")]
 
+class Tag(GraphObject):
+    __primarykey__ = "name"
+
+    name = Property()
+    books = RelatedTo("Book", "TAGGED")
+
+    def book_count(self):
+        count = graph.run("match (b:Book)<-[:TAGGED]-(t:Tag) where t.name='"+
+                          self.name+"' return count(b)").evaluate()
+        return count
+
+    def get_id(self):
+        s = str(self.__node__)
+        return s[s.find("_")+1:s.find(":")]
 
 class User(GraphObject, UserMixin):
     __primarykey__ = "username"

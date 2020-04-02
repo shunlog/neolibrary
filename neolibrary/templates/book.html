@@ -17,10 +17,21 @@
       <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('books.update_book', book_id=book_id) }}">Update</a>
       <button type="button" class="btn btn-danger btn-sm m-1" data-toggle="modal" data-target="#deleteModal">Delete</button>
     </div>
+
     <h2 class="article-title">{{ book.title }}</h2>
+
+    <p>
     {% for author in book.authors %}
-    <p class="article-content">{{ author.name }}</p>
+      <a href="{{ url_for('authors.author', author_id=author.get_id()) }}">{{ author.name }}</a>
     {% endfor %}
+    </p>
+
+    <p>
+    {% for tag in book.tags %}
+      <a href="{{ url_for('tags.tag', tag_id=tag.get_id()) }}">#{{ tag.name }}</a>
+    {% endfor %}
+    </p>
+
     {% if book not in current_user.books_liked%}
       {% if book not in current_user.books_disliked %}
       <!-- book not reviewed -->
@@ -40,6 +51,7 @@
       </form>
       {% endif %}
     {% else %}
+
     <!-- book liked -->
     <form action="{{ url_for('books.review_book', book_id=book_id, action='rm_like') }}" method="POST">
       <input class="btn btn-primary btn-sm mt-1 mb-1" type="submit" value="Like">

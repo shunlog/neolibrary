@@ -18,6 +18,7 @@
         {{ form.title(class="form-control form-control-lg") }}
         {% endif %}
       </div>
+
       <div class="form-group">
         {{ form.authors.label(class="form-control-label") }}
         {% if form.authors.errors %}
@@ -31,6 +32,21 @@
         {{ form.authors(class="form-control form-control-lg") }}
         {% endif %}
       </div>
+
+      <div class="form-group">
+        {{ form.tags.label(class="form-control-label") }}
+        {% if form.tags.errors %}
+        {{ form.tags(class="form-control form-control-lg is-invalid") }}
+        <div class="invalid-feedback">
+          {% for error in form.tags.errors %}
+          <span>{{ error }}</span>
+          {% endfor %}
+        </div>
+        {% else %}
+        {{ form.tags(class="form-control form-control-lg") }}
+        {% endif %}
+      </div>
+
       <div class="form-group">
         {{ form.picture.label() }}
         {{ form.picture(class="form-control-file") }}
@@ -40,6 +56,7 @@
         {% endfor %}
         {% endif %}
       </div>
+
       <div class="form-group">
         {{ form.link.label() }}
         {{ form.link(class="form-control-label") }}

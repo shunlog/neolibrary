@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="content-section">
+  <form method="POST" action="" enctype="multipart/form-data">
+      {% for tag in tags %}
+      <div class="form-check custom-control custom-checkbox">
+          <input class="form-check-input custom-control-input" name="tag" id="{{tag.name}}"
+                 type="checkbox" value="{{tag.name}}">
+          <label class="form-check-label custom-control-label" for="{{tag.name}}">
+              {{ tag.name }}
+          </label>
+          <span class="float-right">
+              {{ tag.book_count() }}
+          </span>
+      </div>
+      {% endfor %}
+      <input type="submit" value="Delete selected tags">
+  </form>
+  <input type="submit" id="select_tags" value="Select tags with no books">
+</div>
+
+{% endblock content %}
