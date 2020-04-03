@@ -1,21 +1,87 @@
 {% extends "layout.html" %}
 {% block content %}
 
-<div class="input-group">
-  <input type="text" class="form-control" aria-label="Text input with segmented dropdown button">
-  <div class="input-group-append">
-    <form action="{{ url_for('search.search', book_id=book_id, action='add_like') }}" method="POST">
-      <button type="button" class="btn btn-outline-secondary">Search</button>
-      <button type="button" class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        <span class="sr-only">Toggle Dropdown</span>
-      </button>
-      <div class="dropdown-menu">
-        <a class="dropdown-item" href="#">Books</a>
-        <a class="dropdown-item" href="#">Authors</a>
-        <a class="dropdown-item" href="#">Tags</a>
-      </div>
-    </form>
+<form method="POST">
+  <div class="input-group mb-3">
+    {{ form.hidden_tag() }}
+    <div class="input-group-prepend">
+      {{ form.select(class="btn btn-outline-secondary dropdown-toggle") }}
+    </div>
+    {{ form.search(class="form-control") }}
+    <div class="input-group-apend">
+      <button type="submit" value="Search" class="btn btn-outline-secondary">Search</button>
+    </div>
   </div>
+</form>
+
+<div class="row">
+  {% if books %}
+  {% for book in books %}
+  <div class="col-xl-3 col-md-4 col-sm-6">
+    <div class="card d-100 d-flex" >
+      <div class="row no-gutters">
+
+        <div class="col-sm-12">
+          <a href="{{ url_for('books.book', book_id=book.get_id()) }}" class="card-title">
+            {% if book.image_file %}
+            <img src="{{ image_folder + book.image_file }}"
+                 class="img-fluid mx-auto d-block card-img-top"
+                 alt="Image is not available">
+            {% else %}
+            <img src="{{ image_folder + 'default.png' }}"
+                 class="img-fluid card-img-top"
+                 alt="Image is not available">
+            {% endif %}
+          </a>
+        </div>
+
+        <div class="col-md-12">
+          <div class="card-body">
+            <a href="{{ url_for('books.book', book_id=book.get_id()) }}" class="card-title">
+              <h5 >{{ book.title }}</h5>
+            </a>
+            <p class="card-text">By
+              {% for author in book.authors %}
+              <a href="{{ url_for('authors.author', author_id=author.get_id()) }}">{{ author.name }}</a>
+              {% endfor %}
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  {% endfor%}
+
+  {% elif authors %}
+  <div class="content-section">
+    {% for author in authors %}
+    <div class="form-check custom-control custom-checkbox">
+      <label class="form-check-label custom-control-label" for="{{author.name}}">
+        {{ author.name }}
+      </label>
+      <span class="float-right">
+        {{ author.book_count() }}
+      </span>
+    </div>
+    {% endfor %}
+  </div>
+
+  {% elif tags%}
+  <div class="content-section">
+    {% for tag in tags %}
+    <div class="form-check custom-control custom-checkbox">
+      <label class="form-check-label custom-control-label" for="{{tag.name}}">
+        {{ tag.name }}
+      </label>
+      <span class="float-right">
+        {{ tag.book_count() }}
+      </span>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
 </div>
 
 {% endblock content %}
