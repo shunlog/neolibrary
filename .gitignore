@@ -3,7 +3,6 @@ test
 test.py
 
 neolibrary/static/*/*
-config.py
 test.py
 
 *.pyc
