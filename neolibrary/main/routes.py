@@ -17,7 +17,7 @@ def home():
     elif page < 1:
         page = 1
 
-    n_skip = n_limit * (page - 1)
+    n_skip = abs(n_limit * (page - 1))
     books = Book().match(graph).skip(n_skip).limit(n_limit)
 
     page_ls = Book().iter_pages(page, left_edge=2, right_edge=1, left_current=1, right_current=3)

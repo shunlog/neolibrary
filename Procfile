@@ -1,1 +1,1 @@
-web: gunicorn app:library-flask
+web: gunicorn -w 1 app:app --preload 

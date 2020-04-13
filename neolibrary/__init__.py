@@ -3,15 +3,23 @@ from py2neo import Graph
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
 from neolibrary.config import Config
+import os
 
 app = Flask(__name__)
 app.config.from_object(Config)
 
-graph = Graph(password=Config.DB_PASSWORD)
+graphenedb_url = Config.GRAPHENEDB_URL
+graphenedb_user = Config.GRAPHENEDB_USER
+graphenedb_pass = Config.GRAPHENEDB_PASSWORD
+if graphenedb_url:
+        graph = Graph(graphenedb_url, user=graphenedb_user, password=graphenedb_pass, bolt = True, secure = True, http_port = 24789, https_port = 24780)
+else:
+        graph = Graph(password=Config.DB_PASSWORD)
+
 bcrypt = Bcrypt(app)
 
-book_covers = Config.book_covers
-profile_pics = Config.profile_pics
+book_covers = Config.BOOK_COVERS
+profile_pics = Config.PROFILE_PICS
 
 login_manager = LoginManager(app)
 login_manager.login_view = 'users.login'

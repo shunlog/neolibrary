@@ -1,5 +1,12 @@
+import os
+
 class Config:
-        SECRET_KEY = '5791628bb0b13ce0c676dfde280ba245'
-        DB_PASSWORD = 'adminadmin'
-        book_covers='static/book_covers/'
-        profile_pics='static/profile_pics/'
+        GRAPHENEDB_URL = os.getenv("GRAPHENEDB_BOLT_URL")
+        GRAPHENEDB_USER = os.getenv("GRAPHENEDB_BOLT_USER")
+        GRAPHENEDB_PASSWORD = os.getenv('GRAPHENEDB_BOLT_PASSWORD')
+        DB_PASSWORD = os.getenv('DB_PASSWORD')
+        SECRET_KEY = os.getenv('SECRET_KEY')
+        BOOK_COVERS = os.getenv('BOOK_COVERS')
+        PROFILE_PICS = os.getenv('PROFILE_PICS')
+
+print("SECRET KEY = ", Config.SECRET_KEY)
