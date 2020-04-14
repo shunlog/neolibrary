@@ -12,7 +12,7 @@ from neolibrary.books.utils import match_book, match_list_of_books, save_book_co
 books = Blueprint('books', __name__)
 
 @books.route("/book/new", methods=['GET', 'POST'])
-@login_required
+#@login_required
 def new_book():
     form = BookForm()
     if form.validate_on_submit():
@@ -80,7 +80,7 @@ def book(book_id):
 
 
 @books.route("/book/<int:book_id>/update", methods=['GET', 'POST'])
-@login_required
+#@login_required
 def update_book(book_id):
     book = Book().match(graph).where("id(_)=%d"%book_id).first()
     form = BookForm()
@@ -143,7 +143,7 @@ def update_book(book_id):
         return render_template('no_such_item.html', item=book)
 
 @books.route("/book/<int:book_id>/delete", methods=['POST'])
-@login_required
+#@login_required
 def delete_book(book_id):
     book = Book().match(graph).where("id(_)=%d"%book_id).first()
     delete_book_cover(book.image_file)
@@ -153,7 +153,7 @@ def delete_book(book_id):
 
 
 @books.route("/book/<int:book_id>/review/<string:action>", methods=['POST'])
-@login_required
+#@login_required
 def review_book(book_id, action):
     book = Book().match(graph).where("id(_)=%d"%book_id).first()
     if action == "add_like":

@@ -18,7 +18,7 @@ def author(author_id):
 
 
 @authors.route("/author/<int:author_id>/update", methods=['GET', 'POST'])
-@login_required
+#@login_required
 def update_author(author_id):
     author = Author().match(graph).where("id(_)=%d"%author_id).first()
     form = AuthorForm()
@@ -37,7 +37,7 @@ def update_author(author_id):
 
 
 @authors.route("/author/<int:author_id>/delete", methods=['POST'])
-@login_required
+#@login_required
 def delete_author(author_id):
     author = Author().match(graph).where("id(_)=%d"%author_id).first()
     graph.delete(author)
@@ -46,7 +46,7 @@ def delete_author(author_id):
 
 
 @authors.route("/author/<int:author_id>/like", methods=['POST'])
-@login_required
+#@login_required
 def like_author(author_id):
     author = Author().match(graph).where("id(_)=%d"%author_id).first()
     graph.delete(author)

@@ -18,7 +18,7 @@ def tag(tag_id):
 
 
 @tags.route("/tag/<int:tag_id>/update", methods=['GET', 'POST'])
-@login_required
+#@login_required
 def update_tag(tag_id):
     tag = Tag().match(graph).where("id(_)=%d"%tag_id).first()
     form = TagForm()
@@ -37,7 +37,7 @@ def update_tag(tag_id):
 
 
 @tags.route("/tag/<int:tag_id>/delete", methods=['POST'])
-@login_required
+#@login_required
 def delete_tag(tag_id):
     tag = Tag().match(graph).where("id(_)=%d"%tag_id).first()
     graph.delete(tag)
