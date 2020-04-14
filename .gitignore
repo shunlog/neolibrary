@@ -3,6 +3,8 @@ test
 test.py
 
 neolibrary/static/*/*
+!*/static/*/default.png
+!*/static/*/default.jpg
 test.py
 
 *.pyc
