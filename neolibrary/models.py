@@ -86,12 +86,12 @@ class User(GraphObject, UserMixin):
     books_liked = RelatedTo(Book, "LIKED")
     books_disliked = RelatedTo(Book, "DISLIKED")
 
-    def get_id(self):
+    def get_node_id(self):
         s = str(self.__node__)
         id = s[s.find("_")+1:s.find(":")]
         print("ID:",id)
         return id
 
-    def get_username(self):
+    def get_id(self):
         return self.username.encode('utf-8')
 
