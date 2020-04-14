@@ -9,4 +9,3 @@ class Config:
         BOOK_COVERS = os.getenv('BOOK_COVERS')
         PROFILE_PICS = os.getenv('PROFILE_PICS')
 
-print("SECRET KEY = ", Config.SECRET_KEY)

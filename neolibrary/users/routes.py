@@ -1,8 +1,9 @@
 import os
 import secrets
 from flask import render_template, url_for, flash, redirect, request, Blueprint
+from flask import current_app as app
 from flask_login import login_user, current_user, logout_user, login_required
-from neolibrary import app, graph, bcrypt, profile_pics
+from neolibrary import graph, bcrypt, profile_pics
 from neolibrary.models import User
 from neolibrary.users.utils import crop_n_resize, save_profile_pic, delete_profile_pic
 from neolibrary.users.forms import RegistrationForm, LoginForm, UpdateAccountForm

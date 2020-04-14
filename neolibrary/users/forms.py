@@ -1,9 +1,10 @@
+from flask import current_app as app
 from flask_login import login_user, current_user, logout_user, login_required
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileAllowed
 from wtforms import StringField, PasswordField, SubmitField, BooleanField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
-from neolibrary import app, graph 
+from neolibrary import graph
 from neolibrary.models import User 
 
 class RegistrationForm(FlaskForm):

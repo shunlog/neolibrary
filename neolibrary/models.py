@@ -1,15 +1,16 @@
 from datetime import datetime
+from itertools import groupby
+
+from flask import current_app as app
 from neolibrary import graph, login_manager
+from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from py2neo.ogm import GraphObject, Property, RelatedFrom, RelatedTo
 from flask_login import UserMixin
-from itertools import groupby
 
 @login_manager.user_loader
 def load_user(username):
     return User.match(graph).where(username=username).first()
 
-def __count__(obj):
-    return
 
 class Book(GraphObject):
     __primarykey__ = "title"
@@ -87,7 +88,10 @@ class User(GraphObject, UserMixin):
 
     def get_id(self):
         s = str(self.__node__)
-        return s[s.find("_")+1:s.find(":")]
+        id = s[s.find("_")+1:s.find(":")]
+        print("ID:",id)
+        return id
 
     def get_username(self):
         return self.username.encode('utf-8')
+

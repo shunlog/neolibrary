@@ -1,6 +1,7 @@
 from flask import render_template, url_for, flash, redirect, request, Blueprint
+from flask import current_app as app
 from flask_login import current_user, login_required
-from neolibrary import app, graph, book_covers 
+from neolibrary import graph, book_covers
 from neolibrary.main.utils import sidebar
 from neolibrary.models import Author 
 from neolibrary.authors.forms import AuthorForm

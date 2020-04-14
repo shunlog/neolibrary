@@ -5,8 +5,6 @@ from flask_login import LoginManager
 from neolibrary.config import Config
 import os
 
-app = Flask(__name__)
-app.config.from_object(Config)
 
 graphenedb_url = Config.GRAPHENEDB_URL
 graphenedb_user = Config.GRAPHENEDB_USER
@@ -16,25 +14,35 @@ if graphenedb_url:
 else:
         graph = Graph(password=Config.DB_PASSWORD)
 
-bcrypt = Bcrypt(app)
+bcrypt = Bcrypt()
 
 book_covers = Config.BOOK_COVERS
 profile_pics = Config.PROFILE_PICS
 
-login_manager = LoginManager(app)
+login_manager = LoginManager()
 login_manager.login_view = 'users.login'
 login_manager.login_message_category = 'info'
 
-from neolibrary.main.routes import main
-from neolibrary.users.routes import users
-from neolibrary.books.routes import books
-from neolibrary.authors.routes import authors
-from neolibrary.tags.routes import tags
-from neolibrary.search.routes import search_bl
 
-app.register_blueprint(main)
-app.register_blueprint(users)
-app.register_blueprint(books)
-app.register_blueprint(authors)
-app.register_blueprint(tags)
-app.register_blueprint(search_bl)
+def create_app(config_class=Config):
+        app = Flask(__name__)
+        app.config.from_object(Config)
+
+        bcrypt.init_app(app)
+        login_manager.init_app(app)
+
+        from neolibrary.main.routes import main
+        from neolibrary.users.routes import users
+        from neolibrary.books.routes import books
+        from neolibrary.authors.routes import authors
+        from neolibrary.tags.routes import tags
+        from neolibrary.search.routes import search_bl
+
+        app.register_blueprint(main)
+        app.register_blueprint(users)
+        app.register_blueprint(books)
+        app.register_blueprint(authors)
+        app.register_blueprint(tags)
+        app.register_blueprint(search_bl)
+
+        return app

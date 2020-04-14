@@ -1,4 +1,5 @@
-from neolibrary import app, graph
+from flask import current_app as app
+from neolibrary import  graph
 from neolibrary.models import Book, Author, User, Tag
 
 def sidebar():

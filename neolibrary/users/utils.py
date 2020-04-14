@@ -1,7 +1,8 @@
 import os
 import secrets
 from PIL import Image
-from neolibrary import app, profile_pics
+from neolibrary import  profile_pics
+from flask import current_app as app
 
 def crop_n_resize(pic):
     width, height = pic.size
