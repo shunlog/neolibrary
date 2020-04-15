@@ -7,7 +7,7 @@ from neolibrary import graph, book_covers
 from neolibrary.main.utils import sidebar
 from neolibrary.books.forms import BookForm
 from neolibrary.models import Book, Author, Tag
-from neolibrary.books.utils import match_book, match_list_of_books, save_book_cover, download_book_cover, delete_book_cover
+from neolibrary.books.utils import match_book, match_list, save_book_cover, download_book_cover, delete_book_cover
 
 books = Blueprint('books', __name__)
 
