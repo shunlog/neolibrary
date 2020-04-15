@@ -16,22 +16,17 @@ def match_book(query, node):
         return book
     except:
         print("Error running query!")
-        return None
 
-def match_list(query, names):
+def match_list(query, name):
     # this function is very very VERY bad
     ls = []
     try:
         dt = graph.run(query).data()
         for node in dt:
-            for name in names:
-                try:
-                    n = node[name]
-                    book = Book().wrap(n)
-                    if book not in ls:
-                        ls.append(book)
-                except:
-                    pass
+            n = node[name]
+            book = Book().wrap(n)
+            ls.append(book)
+        print(ls)
         return ls
     except:
         print("Error running query!")

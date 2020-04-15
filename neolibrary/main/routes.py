@@ -27,20 +27,33 @@ def home():
     n_skip = abs(n_limit * (page - 1))
 
     if current_user.is_authenticated:
-        books = match_list('''optional match (b2:Book)<--(:Tag)-->(:Book)<-[:LIKED]-(u:User{username:"'''+
-                    current_user.username+'''"})
-                    where not (u)-->(b2)
-                    match (b1:Book)<--(:Author)-->(:Book)<-[:LIKED]-(u:User{username:"'''+
-                    current_user.username+'''"})
-                    where not (u)-->(b1)
-                    return distinct b1,b2
-                    ''', ['b1', 'b2'])
-        page_ls = Book().iter_pages_recommended(page, 2, 1, 1, 3, current_user.username)
+        books_recommended = {}
+        books_recommended["users"] = match_list("match (b:Book)<-[:LIKED]-(:User)-[:LIKED]->(c:Book)<-[:LIKED]-(u:User{username:'"+
+                    current_user.username+"'})\
+                    where not (u)-->(b)\
+                    return b, count(c)\
+                    order by count(c) desc\
+                    limit "+str(n_limit), 'b')
+        books_recommended["tags"] = match_list("match (b:Book)<-[:TAGGED]-()-[:TAGGED]->(c:Book)<-[:LIKED]-(u:User{username:'"+
+                    current_user.username+"'})\
+                    where not (u)-->(b)\
+                    return b, count(c)\
+                    order by count(c) desc\
+                    limit "+str(n_limit), 'b')
+        books_recommended["authors"] = match_list("match (b:Book)<-[:WROTE]-()-[:WROTE]->(c:Book)<-[:LIKED]-(u:User{username:'"+
+                    current_user.username+"'})\
+                    where not (u)-->(b)\
+                    return b, count(c)\
+                    order by count(c) desc\
+                    limit "+str(n_limit), 'b')
+        #page_ls = Book().iter_pages_recommended(page, 2, 1, 1, 3, current_user.username)
+
+        return render_template('home.html', title='home',sidebar=sidebar(),
+                                books_recommended=books_recommended, image_folder=book_covers)
     else:
-        books = Book().match(graph)
+        books = Book().match(graph).limit(n_limit).skip(n_skip)
         page_ls = Book().iter_pages(page, 2, 1, 1, 3)
 
-
-    return render_template('home.html', title='home',sidebar=sidebar(),
-                           books=books, current_page = page, page_ls = page_ls,
-                           image_folder=book_covers)
+        return render_template('home.html', title='home',sidebar=sidebar(),
+                                books=books, current_page = page, page_ls = page_ls,
+                                image_folder=book_covers)
