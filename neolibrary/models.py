@@ -17,13 +17,16 @@ class Book(GraphObject):
 
     n_limit = 8
     count = graph.run("match(n:Book) return count(n)").evaluate()
-    count_recommended = graph.run('''match (b1:Book)<-[:WROTE]-(:Author)-[:WROTE]->(b_liked:Book)<-[:LIKED]-(u:User{username:"admin"})
+    pages = count // n_limit if count % n_limit == 0 else count // n_limit + 1
+
+    def pages_recommended(self, username):
+        count_recommended = graph.run('''match (b1:Book)<-[:WROTE]-(:Author)-[:WROTE]->(b_liked:Book)<-[:LIKED]-(u:User{username:"'''+username+'''"})
                             where not (u)-[]->(b1)
                             return count(b1)''').evaluate()
-    pages = count // n_limit if count % n_limit == 0 else count // n_limit + 1
-    pages_recommended = count_recommended // n_limit if\
-                        count_recommended % n_limit == 0 else\
-                        count_recommended // n_limit + 1
+        pages = count_recommended // self.n_limit if\
+                count_recommended % self.n_limit == 0 else\
+                count_recommended // self.n_limit + 1
+        return pages
 
     def get_id(self):
         s = str(self.__node__)
@@ -39,8 +42,8 @@ class Book(GraphObject):
         ls = [i[0] for i in groupby(ls)]
         return ls
 
-    def iter_pages_recommended(self,current_page, left_edge=1, right_edge=1, left_current=1, right_current=1):
-        pages = self.pages_recommended
+    def iter_pages_recommended(self, current_page, left_edge=1, right_edge=1, left_current=1, right_current=1,username=None):
+        pages = self.pages_recommended(username)
         ls = [i for i in range(1,pages+1)]
         ls2 = [i for i in range(current_page-left_current-1, current_page+right_current)]
         for i in range(left_edge,pages-right_edge):
