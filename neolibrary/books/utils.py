@@ -1,6 +1,7 @@
 import os
 import secrets
 import urllib.request
+from itertools import groupby
 from flask import current_app as app
 from PIL import Image
 from neolibrary import graph, book_covers
@@ -32,6 +33,14 @@ def match_list(query, name):
         print("Error running query!")
         return None
 
+def iter_pages(pages, current_page, left_edge=1, right_edge=1, left_current=1, right_current=1):
+    ls = [i for i in range(1,pages+1)]
+    ls2 = [i for i in range(current_page-left_current-1, current_page+right_current)]
+    for i in range(left_edge,pages-right_edge):
+        if i not in ls2:
+            ls[i] = None
+    ls = [i[0] for i in groupby(ls)]
+    return ls
 
 def save_book_cover(new_pic):
     global book_covers

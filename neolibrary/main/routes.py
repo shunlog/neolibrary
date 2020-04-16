@@ -46,14 +46,12 @@ def home():
                     return b, count(c)\
                     order by count(c) desc\
                     limit "+str(n_limit), 'b')
-        #page_ls = Book().iter_pages_recommended(page, 2, 1, 1, 3, current_user.username)
 
         return render_template('home.html', title='home',sidebar=sidebar(),
                                 books_recommended=books_recommended, image_folder=book_covers)
     else:
         books = Book().match(graph).limit(n_limit).skip(n_skip)
-        page_ls = Book().iter_pages(page, 2, 1, 1, 3)
 
         return render_template('home.html', title='home',sidebar=sidebar(),
-                                books=books, current_page = page, page_ls = page_ls,
+                                books=books, current_page = page,
                                 image_folder=book_covers)

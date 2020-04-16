@@ -1,12 +1,8 @@
 {% extends "layout.html" %}
 {% block content %}
 
-<form method="POST">
+<form method="GET">
   <div class="input-group mb-3">
-    {{ form.hidden_tag() }}
-    <div class="input-group-prepend">
-      {{ form.select(class="btn btn-outline-secondary dropdown-toggle") }}
-    </div>
     {{ form.search(class="form-control") }}
     <div class="input-group-apend">
       <button type="submit" value="Search" class="btn btn-outline-secondary">Search</button>
@@ -15,7 +11,6 @@
 </form>
 
 <div class="row">
-  {% if books %}
   {% for book in books %}
   <div class="col-xl-2 col-md-3 col-4">
     <div class="card d-100 d-flex" >
@@ -52,89 +47,22 @@
     </div>
   </div>
   {% endfor%}
-  {% elif authors %}
-  {% for author in authors %}
-  {% for book in author.books %}
-  <div class="col-xl-2 col-md-3 col-4">
-    <div class="card d-100 d-flex" >
-      <div class="row no-gutters">
-
-        <div class="col-sm-12">
-          <a href="{{ url_for('books.book', book_id=book.get_id()) }}" class="card-title">
-            {% if book.image_file %}
-            <img src="{{ image_folder + book.image_file }}"
-                 class="img-fluid mx-auto d-block card-img-top"
-                 alt="Image is not available">
-            {% else %}
-            <img src="{{ image_folder + 'default.png' }}"
-                 class="img-fluid card-img-top"
-                 alt="Image is not available">
-            {% endif %}
-          </a>
-        </div>
-
-        <div class="col-md-12">
-          <div class="card-body">
-            <a href="{{ url_for('books.book', book_id=book.get_id()) }}" class="card-title">
-              <h5 >{{ book.title }}</h5>
-            </a>
-            <p class="card-text">By
-              {% for author in book.authors %}
-              <a href="{{ url_for('authors.author', author_id=author.get_id()) }}">{{ author.name }}</a>
-              {% endfor %}
-            </p>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </div>
-  {% endfor%}
-  {% endfor%}
-  {% elif tags %}
-  {% for tag in tags %}
-  {% for book in tag.books %}
-  <div class="col-xl-2 col-md-3 col-4">
-    <div class="card d-100 d-flex" >
-      <div class="row no-gutters">
-
-        <div class="col-sm-12">
-          <a href="{{ url_for('books.book', book_id=book.get_id()) }}" class="card-title">
-            {% if book.image_file %}
-            <img src="{{ image_folder + book.image_file }}"
-                 class="img-fluid mx-auto d-block card-img-top"
-                 alt="Image is not available">
-            {% else %}
-            <img src="{{ image_folder + 'default.png' }}"
-                 class="img-fluid card-img-top"
-                 alt="Image is not available">
-            {% endif %}
-          </a>
-        </div>
-
-        <div class="col-md-12">
-          <div class="card-body">
-            <a href="{{ url_for('books.book', book_id=book.get_id()) }}" class="card-title">
-              <h5 >{{ book.title }}</h5>
-            </a>
-            <p class="card-text">By
-              {% for author in book.authors %}
-              <a href="{{ url_for('authors.author', author_id=author.get_id()) }}">{{ author.name }}</a>
-              {% endfor %}
-            </p>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </div>
-  {% endfor%}
-  {% endfor%}
-  {% endif %}
-
-
 
 </div>
+
+{% for page_num in page_ls %}
+  {% if page_num %}
+    {% if current_page == page_num %}
+      <a class="btn btn-info mb-4 disabled" href="{{ url_for('search.search',
+        page=page_num, search=search)}}">{{ page_num }}</a>
+    {% else %}
+      <a class="btn btn-outline-info mb-4" href="{{ url_for('search.search',
+        page=page_num, search=search) }}">{{ page_num }}</a>
+    {% endif %}
+  {% else %}
+    <a class="btn btn-outline-info mb-4 disabled">...</a>
+  {% endif %}
+{% endfor %}
 
 {% endblock content %}
 

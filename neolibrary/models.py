@@ -1,5 +1,4 @@
 from datetime import datetime
-from itertools import groupby
 
 from flask import current_app as app
 from neolibrary import graph, login_manager
@@ -32,25 +31,6 @@ class Book(GraphObject):
         s = str(self.__node__)
         return s[s.find("_")+1:s.find(":")]
 
-    def iter_pages(self,current_page, left_edge=1, right_edge=1, left_current=1, right_current=1):
-        pages = self.pages
-        ls = [i for i in range(1,self.pages+1)]
-        ls2 = [i for i in range(current_page-left_current-1, current_page+right_current)]
-        for i in range(left_edge,pages-right_edge):
-            if i not in ls2:
-                ls[i] = None
-        ls = [i[0] for i in groupby(ls)]
-        return ls
-
-    def iter_pages_recommended(self, current_page, left_edge=1, right_edge=1, left_current=1, right_current=1,username=None):
-        pages = self.pages_recommended(username)
-        ls = [i for i in range(1,pages+1)]
-        ls2 = [i for i in range(current_page-left_current-1, current_page+right_current)]
-        for i in range(left_edge,pages-right_edge):
-            if i not in ls2:
-                ls[i] = None
-        ls = [i[0] for i in groupby(ls)]
-        return ls
 
     title = Property()
     image_file = Property()
