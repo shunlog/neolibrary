@@ -18,20 +18,18 @@ def match_book(query, node):
     except:
         print("Error running query!")
 
-def match_list(query, name):
+def data_to_obj_ls(dt):
     # this function is very very VERY bad
     ls = []
-    try:
-        dt = graph.run(query).data()
-        for node in dt:
-            n = node[name]
-            book = Book().wrap(n)
+    for node in dt:
+        if type(node).__name__ == "Record":
+            book = Book().wrap(node[0])
             ls.append(book)
-        print(ls)
-        return ls
-    except:
-        print("Error running query!")
-        return None
+        else:
+            for key in node:
+                book = Book().wrap(node[key])
+            ls.append(book)
+    return ls
 
 def iter_pages(pages, current_page, left_edge=1, right_edge=1, left_current=1, right_current=1):
     ls = [i for i in range(1,pages+1)]

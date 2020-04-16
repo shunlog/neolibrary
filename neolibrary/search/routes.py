@@ -4,7 +4,7 @@ from neolibrary import graph, book_covers
 from neolibrary.main.utils import sidebar
 from neolibrary.models import Book, Author, User, Tag
 from neolibrary.search.forms import SearchForm
-from neolibrary.books.utils import match_list, iter_pages
+from neolibrary.books.utils import data_to_obj_ls, iter_pages
 
 search_bl = Blueprint('search', __name__)
 n_limit = Book.n_limit
@@ -12,6 +12,7 @@ n_limit = Book.n_limit
 @search_bl.route("/search", methods=['GET', 'POST'])
 def search():
 
+    print("================================================")
     search = SearchForm(request.form)
     page = request.args.get('page',1, type=int)
     search_str = request.args.get('search', type=str)
@@ -19,19 +20,22 @@ def search():
 
     if search_str and search_str != '':
         search_str = search_str.replace('a', '[aâă]').replace('A', '[AÂĂ]').replace('t', '[tț]').replace('T', '[TȚ]').replace('s', '[sș]').replace('S', '[SȘ]').replace('i', '[iȋ]').replace('I', '[IȊ]')
-        print(search_str)
+        search_str = "(?i).*" + search_str + ".*"
+
 
         query = "match (a:Author)-->(b:Book)\
-            where b.title=~'(?i).*" + search_str + ".*' \
+            where b.title=~$search_str \
             return b union\
             match (b)<--(t:Tag)\
-            where t.name=~'(?i).*" + search_str + ".*' \
+            where t.name=~$search_str \
             return b union\
             match (b)<--(a:Author)\
-            where a.name=~'(?i).*" + search_str + ".*' \
+            where a.name=~$search_str \
             return distinct b"
 
-        books = match_list(query, 'b')
+        dt = graph.run(query,search_str=search_str).data()
+        books = data_to_obj_ls(dt)
+
         count = len(books)
         pages = count // n_limit if count % n_limit == 0 else count // n_limit + 1
         if page > pages:
