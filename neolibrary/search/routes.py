@@ -15,8 +15,12 @@ def search():
     search = SearchForm(request.form)
     page = request.args.get('page',1, type=int)
     search_str = request.args.get('search', type=str)
+    # match romanian chars
 
     if search_str and search_str != '':
+        search_str = search_str.replace('a', '[aâă]').replace('A', '[AÂĂ]').replace('t', '[tț]').replace('T', '[TȚ]').replace('s', '[sș]').replace('S', '[SȘ]').replace('i', '[iȋ]').replace('I', '[IȊ]')
+        print(search_str)
+
         query = "match (a:Author)-->(b:Book)\
             where b.title=~'(?i).*" + search_str + ".*' \
             return b union\

@@ -14,7 +14,7 @@ users = Blueprint('users', __name__)
 @users.route("/register", methods=['GET', 'POST'])
 def register():
     if current_user.is_authenticated:
-            return redirect(url_for('main.home'))
+        return redirect(url_for('main.home'))
     form = RegistrationForm()
     if form.validate_on_submit():
         hashed_password = bcrypt.generate_password_hash(form.password.data)\
@@ -32,7 +32,7 @@ def register():
 @users.route("/login", methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
-            return redirect(url_for('main.home'))
+        return redirect(url_for('main.home'))
     form = LoginForm()
     if form.validate_on_submit():
         user = User.match(graph).where(username=form.username.data).first()
@@ -65,12 +65,12 @@ def edit_account():
         if form.picture.data:
             if current_user.image_file != "default.png":
                 delete_profile_pic(current_user.image_file)
-            picture_file = save_profile_pic(form.picture.data)
-            current_user.image_file = picture_file
-        current_user.username = form.username.data
-        current_user.email = form.email.data
-        graph.push(current_user)
-        flash('Your account has been updated!', 'success')
+                picture_file = save_profile_pic(form.picture.data)
+                current_user.image_file = picture_file
+                current_user.username = form.username.data
+                current_user.email = form.email.data
+                graph.push(current_user)
+                flash('Your account has been updated!', 'success')
         return redirect(url_for('users.account'))
     elif request.method == 'GET':
         form.username.data = current_user.username
@@ -91,8 +91,8 @@ def list_users():
             u_obj = User().match(graph, username).first()
             if u_obj.image_file and u_obj.image_file != "default.png":
                 delete_profile_pic(u_obj.image_file)
-            graph.delete(u_obj)
-        flash(str(count)+' users have been deleted!', 'success')
+                graph.delete(u_obj)
+                flash(str(count)+' users have been deleted!', 'success')
         return redirect(url_for('users.list_users'))
 
     return render_template('list_users.html', users=users, image_folder=profile_pics)
