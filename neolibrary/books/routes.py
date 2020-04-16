@@ -14,6 +14,11 @@ books = Blueprint('books', __name__)
 @books.route("/book/new", methods=['GET', 'POST'])
 @login_required
 def new_book():
+    if not current_user.is_admin:
+        flash(f'Admin account required!', 'danger')
+        return redirect(url_for('main.home'))
+
+    print(current_user.is_admin)
     form = BookForm()
     if form.validate_on_submit():
 
@@ -82,6 +87,9 @@ def book(book_id):
 @books.route("/book/<int:book_id>/update", methods=['GET', 'POST'])
 @login_required
 def update_book(book_id):
+    if not current_user.is_admin:
+        flash(f'Admin account required!', 'danger')
+        return redirect(url_for('main.home'))
     book = Book().match(graph).where("id(_)=%d"%book_id).first()
     form = BookForm()
     if book and form.validate_on_submit():
@@ -145,6 +153,9 @@ def update_book(book_id):
 @books.route("/book/<int:book_id>/delete", methods=['POST'])
 @login_required
 def delete_book(book_id):
+    if not current_user.is_admin:
+        flash(f'Admin account required!', 'danger')
+        return redirect(url_for('main.home'))
     book = Book().match(graph).where("id(_)=%d"%book_id).first()
     delete_book_cover(book.image_file)
     graph.delete(book)
@@ -176,6 +187,9 @@ def review_book(book_id, action):
 
 @books.route("/list_books", methods=['GET','POST'])
 def list_books():
+    if not current_user.is_admin:
+        flash(f'Admin account required!', 'danger')
+        return redirect(url_for('main.home'))
     books = Book().match(graph)
     if request.method == 'POST':
             book_ls = request.form.getlist('book')

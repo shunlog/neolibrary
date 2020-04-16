@@ -20,6 +20,9 @@ def tag(tag_id):
 @tags.route("/tag/<int:tag_id>/update", methods=['GET', 'POST'])
 @login_required
 def update_tag(tag_id):
+    if not current_user.is_admin:
+        flash(f'Admin account required!', 'danger')
+        return redirect(url_for('main.home'))
     tag = Tag().match(graph).where("id(_)=%d"%tag_id).first()
     form = TagForm()
     if tag and form.validate_on_submit():
@@ -39,6 +42,9 @@ def update_tag(tag_id):
 @tags.route("/tag/<int:tag_id>/delete", methods=['POST'])
 @login_required
 def delete_tag(tag_id):
+    if not current_user.is_admin:
+        flash(f'Admin account required!', 'danger')
+        return redirect(url_for('main.home'))
     tag = Tag().match(graph).where("id(_)=%d"%tag_id).first()
     graph.delete(tag)
     flash('The tag has been deleted!', 'success')
@@ -47,6 +53,9 @@ def delete_tag(tag_id):
 
 @tags.route("/list_tags", methods=['GET','POST'])
 def list_tags():
+    if not current_user.is_admin:
+        flash(f'Admin account required!', 'danger')
+        return redirect(url_for('main.home'))
     tags = Tag().match(graph)
     if request.method == 'POST':
         tag_ls = request.form.getlist('tag')
@@ -64,6 +73,9 @@ def list_tags():
 
 @tags.route("/add_tags", methods=['GET','POST'])
 def add_tags():
+    if not current_user.is_admin:
+        flash(f'Admin account required!', 'danger')
+        return redirect(url_for('main.home'))
     if request.method == 'POST':
         books_ls = request.form.getlist('book')
 

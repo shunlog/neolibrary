@@ -79,6 +79,8 @@ class User(GraphObject, UserMixin):
     password = Property()
     email = Property()
     image_file = Property()
+    is_admin = Property()
+    count = graph.run("match (u:User) return count(u)").evaluate()
 
     books_read = RelatedTo(Book, "READ")
     books_liked = RelatedTo(Book, "LIKED")

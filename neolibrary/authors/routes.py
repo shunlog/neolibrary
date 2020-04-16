@@ -20,6 +20,9 @@ def author(author_id):
 @authors.route("/author/<int:author_id>/update", methods=['GET', 'POST'])
 @login_required
 def update_author(author_id):
+    if not current_user.is_admin:
+        flash(f'Admin account required!', 'danger')
+        return redirect(url_for('main.home'))
     author = Author().match(graph).where("id(_)=%d"%author_id).first()
     form = AuthorForm()
     if author and form.validate_on_submit():
@@ -39,6 +42,9 @@ def update_author(author_id):
 @authors.route("/author/<int:author_id>/delete", methods=['POST'])
 @login_required
 def delete_author(author_id):
+    if not current_user.is_admin:
+        flash(f'Admin account required!', 'danger')
+        return redirect(url_for('main.home'))
     author = Author().match(graph).where("id(_)=%d"%author_id).first()
     graph.delete(author)
     flash('The author has been deleted!', 'success')
@@ -56,6 +62,9 @@ def like_author(author_id):
 
 @authors.route("/list_authors", methods=['GET','POST'])
 def list_authors():
+    if not current_user.is_admin:
+        flash(f'Admin account required!', 'danger')
+        return redirect(url_for('main.home'))
     authors = Author().match(graph)
     if request.method == 'POST':
             author_ls = request.form.getlist('author')

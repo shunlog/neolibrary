@@ -23,6 +23,8 @@ def register():
         user.username = form.username.data
         user.email = form.email.data
         user.password = hashed_password
+        if User.count == 0:
+            user.is_admin = True
         graph.push(user)
         flash(f'Account created successfully. You can now log in as {form.username.data}!', 'success')
         return redirect(url_for('users.login'))
@@ -81,6 +83,9 @@ def edit_account():
 
 @users.route("/list_users", methods=['GET','POST'])
 def list_users():
+    if not current_user.is_admin:
+        flash(f'Admin account required!', 'danger')
+        return redirect(url_for('main.home'))
     users = User().match(graph)
     if request.method == 'POST':
         user_ls = request.form.getlist('user')
