@@ -49,9 +49,12 @@ def search():
         n_skip = abs(n_limit * (page - 1))
         books = books[n_skip:n_skip+n_limit]
 
-        return render_template('search.html', books=books, form=search, image_folder=book_covers,
+        if books:
+            return render_template('search.html', books=books, form=search, image_folder=book_covers,
                             title="Search", page_ls=page_ls,
                             search=search_str, current_page=page)
+        else:
+            flash("Couldn't find any books","danger")
 
     query = "match(b:Book) optional match (b)--(u:User) return b, count(u)\
             order by count(u) desc, b.title limit $limit"
