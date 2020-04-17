@@ -4,27 +4,13 @@ from neolibrary.models import Book
 from neolibrary import graph, book_covers
 from neolibrary.main.utils import sidebar
 from neolibrary.models import Book
-from neolibrary.books.utils import match_book, data_to_obj_ls
+from neolibrary.books.utils import match_book, data_to_obj_ls, iter_pages
 
 main = Blueprint('main', __name__)
 n_limit = Book.n_limit
 
 @main.route("/")
 def home():
-
-    if current_user.is_authenticated:
-        pages = Book().pages_recommended(current_user.username)
-    else:
-        pages = Book().pages
-
-    page = request.args.get('page',1, type=int)
-    # validate page number
-    if page > pages:
-        page = pages
-    elif page < 1:
-        page = 1
-
-    n_skip = abs(n_limit * (page - 1))
 
     if current_user.is_authenticated:
         books_recommended = {}
@@ -55,8 +41,34 @@ def home():
         return render_template('home.html', title='home',sidebar=sidebar(),
                                 books_recommended=books_recommended, image_folder=book_covers)
     else:
-        books = Book().match(graph).limit(n_limit).skip(n_skip)
+        query = "match(b:Book) optional match (b)--(u:User) return b, count(u)\
+                order by count(u) desc, b.title limit $limit"
+        dt = graph.run(query,limit=n_limit).data()
+        books = data_to_obj_ls(dt)
 
         return render_template('home.html', title='home',sidebar=sidebar(),
-                                books=books, current_page = page,
-                                image_folder=book_covers)
+                                books=books, image_folder=book_covers)
+
+@main.route("/recommended")
+def recommended():
+    if current_user.is_authenticated:
+        pages = Book().pages_recommended(current_user.username)
+    else:
+        pages = Book().pages
+    page = request.args.get('page',1, type=int)
+    n_skip = abs(n_limit * (page - 1))
+    # validate page number
+    if page > pages:
+        page = pages
+    elif page < 1:
+        page = 1
+
+    query = "match(b:Book) optional match (b)--(u:User) return b, count(u)\
+            order by count(u) desc, b.title skip $skip limit $limit"
+    dt = graph.run(query, limit=n_limit, skip=n_skip).data()
+    books = data_to_obj_ls(dt)
+
+    page_ls = iter_pages(pages, page, 2, 1, 1, 3)
+
+    return render_template('recommended.html', title='home', sidebar=sidebar(), current_page=page,
+                            books=books, page_ls=page_ls, image_folder=book_covers)

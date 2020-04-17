@@ -1,6 +1,7 @@
 {% extends "layout.html" %}
 {%block content %}
 {% if books %}
+<h3>Most popular:</h3>
 <div class="row">
   {% for book in books %}
   <div class="col-xl-3 col-md-4 col-sm-6">
@@ -39,6 +40,7 @@
   </div>
   {% endfor%}
 </div>
+<a href="{{url_for('main.recommended')}}"><h4 class="text-center">More -></h4></a>
 
 {% else %}
 

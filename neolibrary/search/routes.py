@@ -19,8 +19,10 @@ def search():
     # match romanian chars
 
     if search_str and search_str != '':
-        search_str = search_str.replace('a', '[aâă]').replace('A', '[AÂĂ]').replace('t', '[tț]').replace('T', '[TȚ]').replace('s', '[sș]').replace('S', '[SȘ]').replace('i', '[iȋ]').replace('I', '[IȊ]')
-        search_str = "(?i).*" + search_str + ".*"
+        print(search_str)
+        search_regexp = search_str.replace('a', '[aâă]').replace('A', '[AÂĂ]').replace('t', '[tț]').replace('T', '[TȚ]').replace('s', '[sș]').replace('S', '[SȘ]').replace('i', '[iȋ]').replace('I', '[IȊ]')
+        search_regexp = "(?i).*" + search_str + ".*"
+        print(search_regexp)
 
 
         query = "match (a:Author)-->(b:Book)\
@@ -33,7 +35,7 @@ def search():
             where a.name=~$search_str \
             return distinct b"
 
-        dt = graph.run(query,search_str=search_str).data()
+        dt = graph.run(query,search_str=search_regexp).data()
         books = data_to_obj_ls(dt)
 
         count = len(books)
@@ -51,15 +53,10 @@ def search():
                             title="Search", page_ls=page_ls,
                             search=search_str, current_page=page)
 
-    pages = Book().pages
-    if page > pages:
-        page = pages
-    elif page < 1:
-        page = 1
+    query = "match(b:Book) optional match (b)--(u:User) return b, count(u)\
+            order by count(u) desc, b.title limit $limit"
 
-    n_skip = abs(n_limit * (page - 1))
-    books = Book().match(graph).limit(n_limit).skip(n_skip)
-    page_ls = iter_pages(pages, page, 2, 1, 1, 3)
+    dt = graph.run(query,limit=n_limit).data()
+    books = data_to_obj_ls(dt)
     return render_template('search.html', form=search, title="Search", search=search_str,
-                        books=books, image_folder=book_covers, page_ls=page_ls,
-                        current_page=page)
+                        books=books, image_folder=book_covers)

@@ -1,22 +1,9 @@
 {% extends "layout.html" %}
-{% block content %}
+{%block content %}
 
-<form method="GET">
-  <div class="input-group mb-3">
-    {{ form.search(class="form-control") }}
-    <div class="input-group-apend">
-      <button type="submit" value="Search" class="btn btn-outline-secondary">Search</button>
-    </div>
-  </div>
-</form>
-
-
-{% if not page_ls %}
-<h4>Most popular</h4>
-{% endif %}
 <div class="row">
   {% for book in books %}
-  <div class="col-xl-2 col-md-3 col-4">
+  <div class="col-xl-3 col-md-4 col-sm-6">
     <div class="card d-100 d-flex" >
       <div class="row no-gutters">
 
@@ -51,17 +38,16 @@
     </div>
   </div>
   {% endfor%}
-
 </div>
 
 {% for page_num in page_ls %}
   {% if page_num %}
     {% if current_page == page_num %}
-      <a class="btn btn-info mb-4 disabled" href="{{ url_for('search.search',
-        page=page_num, search=search)}}">{{ page_num }}</a>
+      <a class="btn btn-info mb-4 disabled" href="{{ url_for('main.recommended',
+        page=page_num)}}">{{ page_num }}</a>
     {% else %}
-      <a class="btn btn-outline-info mb-4" href="{{ url_for('search.search',
-        page=page_num, search=search) }}">{{ page_num }}</a>
+      <a class="btn btn-outline-info mb-4" href="{{ url_for('main.recommended',
+        page=page_num) }}">{{ page_num }}</a>
     {% endif %}
   {% else %}
     <a class="btn btn-outline-info mb-4 disabled">...</a>
@@ -69,4 +55,3 @@
 {% endfor %}
 
 {% endblock content %}
-
