@@ -7,7 +7,9 @@
           <input class="form-check-input custom-control-input" name="author" id="{{author.name}}"
                  type="checkbox" value="{{author.name}}">
           <label class="form-check-label custom-control-label" for="{{author.name}}">
+            <a href="{{ url_for('authors.author', author_id=author.get_id())}}">
               {{ author.name }}
+            </a>
           </label>
           <span class="float-right">
               {{ author.book_count() }}

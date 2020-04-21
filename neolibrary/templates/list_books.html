@@ -2,27 +2,35 @@
 {% block content %}
 <div class="content-section">
   <form method="POST" action="" enctype="multipart/form-data">
-      {% for book in books %}
-      <div class="form-check custom-control custom-checkbox">
-          <input class="form-check-input custom-control-input"
-                 name="book"
-                 id="{{book.get_id()}}"
-                 type="checkbox"
-                 value="{{book.get_id()}}">
-          <label class="form-check-label custom-control-label" for="{{book.get_id()}}">
-              {{ book.title }}
-          </label>
-          <span class="float-right">
-              {% for a in book.authors %}
-              {{ a.name }},
-              {% endfor %}
-          </span>
-      </div>
-      {% endfor %}
-      <input type="submit" value="Delete selected books">
+    {% for book in books %}
+    <div class="form-check custom-control custom-checkbox">
+      <input class="form-check-input custom-control-input"
+             name="book"
+             id="{{book.get_id()}}"
+             type="checkbox"
+             value="{{book.get_id()}}">
+      <label class="form-check-label custom-control-label" for='{{book.get_id()}}'>
+      </label>
+
+      <label>
+        <a href="{{url_for('books.book', book_id=book.get_id()) }} ">
+          {{ book.title }}
+        </a>
+      </label>
+
+      <span class="float-right">
+        {% for a in book.authors %}
+        <a href="{{url_for('authors.author', author_id=a.get_id()) }} ">
+          {{ a.name }},
+        </a>
+        {% endfor %}
+      </span>
+    </div>
+    {% endfor %}
+    <input type="submit" value="Delete selected books">
   </form>
   <form method="POST" action="{{ url_for('tags.add_tags', book_id=book_id) }}">
-      <input type="submit" value="Add tags">
+    <input type="submit" value="Add tags" disabled>
   </form>
 </div>
 {% endblock content %}

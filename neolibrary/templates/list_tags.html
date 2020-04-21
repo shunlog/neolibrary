@@ -7,7 +7,9 @@
           <input class="form-check-input custom-control-input" name="tag" id="{{tag.name}}"
                  type="checkbox" value="{{tag.name}}">
           <label class="form-check-label custom-control-label" for="{{tag.name}}">
+            <a href="{{ url_for('tags.tag', tag_id=tag.get_id()) }}">
               {{ tag.name }}
+            </a>
           </label>
           <span class="float-right">
               {{ tag.book_count() }}
