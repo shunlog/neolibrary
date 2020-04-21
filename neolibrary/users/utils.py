@@ -20,7 +20,7 @@ def save_profile_pic(new_pic):
     random_hex = secrets.token_hex(8)
     _, f_ext = os.path.splitext(new_pic.filename)
     picture_fn = random_hex + f_ext
-    picture_path = os.path.join(app.root_path, profile_pics, picture_fn)
+    picture_path = os.path.join(app.root_path, 'static/', profile_pics, picture_fn)
 
     smaller_pic= Image.open(new_pic)
     smaller_pic= crop_n_resize(smaller_pic)
@@ -32,7 +32,7 @@ def save_profile_pic(new_pic):
 def delete_profile_pic(old_picture):
     global profile_pics
     try:
-        picture_path = os.path.join(app.root_path, profile_pics, old_picture)
+        picture_path = os.path.join(app.root_path, 'static/', profile_pics, old_picture)
         os.remove(picture_path)
     except:
         pass
