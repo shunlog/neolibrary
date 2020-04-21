@@ -91,4 +91,5 @@ a.article-title:hover {
 
 .media img{
     max-height: 240px;
+    width: auto;
 }

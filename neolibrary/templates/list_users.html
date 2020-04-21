@@ -6,10 +6,10 @@
       <div class="row">
           {% if user.image_file %}
           <img class="rounded-circle account-img"
-               src="{{image_folder + user.image_file }}">
+               src="{{ url_for('static', filename= profile_pics+ user.image_file) }}">
           {% else %}
           <img class="rounded-circle account-img"
-               src="{{image_folder + 'default.png' }}">
+               src="{{ url_for('static', filename= profile_pics+ 'default.png') }}">
           {% endif %}
           <div class="form-check custom-control custom-checkbox">
               <input class="form-check-input custom-control-input"

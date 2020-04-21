@@ -49,7 +49,7 @@ def save_book_cover(new_pic):
     random_hex = secrets.token_hex(8)
     _, f_ext = os.path.splitext(new_pic.filename)
     picture_fn = random_hex + f_ext
-    picture_path = os.path.join(app.root_path, book_covers, picture_fn)
+    picture_path = os.path.join(app.root_path, 'static/', book_covers, picture_fn)
 
     image = Image.open(new_pic)
     w, h = image.size
@@ -116,7 +116,7 @@ def download_book_cover(url):
 def delete_book_cover(old_picture):
     global book_covers
     try:
-        picture_path = os.path.join(app.root_path, book_covers, old_picture)
+        picture_path = os.path.join(app.root_path, 'static/', book_covers, old_picture)
         os.remove(picture_path)
         return True
     except:

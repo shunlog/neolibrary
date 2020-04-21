@@ -53,7 +53,7 @@ def search():
         books = books[n_skip:n_skip+n_limit]
 
         if books:
-            return render_template('search.html', books=books, form=search, image_folder=book_covers,
+            return render_template('search.html', books=books, form=search, book_covers=book_covers,
                             title="Search", page_ls=page_ls,
                             search=search_str, current_page=page)
         else:
@@ -65,7 +65,7 @@ def search():
     dt = graph.run(query,limit=n_limit).data()
     books = data_to_obj_ls(dt)
     return render_template('search.html', form=search, title="Search", search=search_str,
-                        books=books, image_folder=book_covers)
+                        books=books, book_covers=book_covers)
 
 @search_bl.route('/autocomplete', methods=['GET','POST'])
 def autocomplete():

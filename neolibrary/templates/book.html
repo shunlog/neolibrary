@@ -3,11 +3,11 @@
 <article class="media content-section">
 
   {% if book.image_file %}
-  <img src="{{ '../' + image_folder + book.image_file }}"
+  <img src="{{ url_for('static', filename= book_covers+ book.image_file) }}"
        class="img-fluid mr-3"
        alt="Image is not available">
   {% else %}
-  <img src="{{ '../' + image_folder + 'default.png' }}"
+  <img src="{{ url_for('static', filename= book_covers+ 'default.png') }}"
        class="img-fluid mr-3"
        alt="Image is not available">
   {% endif %}
@@ -23,35 +23,35 @@
     <h2 class="article-title">{{ book.title }}</h2>
 
     <p>
-    {% for author in book.authors %}
+      {% for author in book.authors %}
       <a href="{{ url_for('authors.author', author_id=author.get_id()) }}">{{ author.name }}</a>
-    {% endfor %}
+      {% endfor %}
     </p>
 
     <p>
-    {% for tag in book.tags %}
+      {% for tag in book.tags %}
       <a href="{{ url_for('tags.tag', tag_id=tag.get_id()) }}">#{{ tag.name }}</a>
-    {% endfor %}
+      {% endfor %}
     </p>
 
     {% if book not in current_user.books_liked%}
-      {% if book not in current_user.books_disliked %}
-      <!-- book not reviewed -->
-      <form action="{{ url_for('books.review_book', book_id=book_id, action='add_like') }}" method="POST">
-        <input class="btn btn-secondary btn-sm mt-1 mb-1" type="submit" value="Like">
-      </form>
-      <form action="{{ url_for('books.review_book', book_id=book_id, action='add_dislike') }}" method="POST">
-        <input class="btn btn-secondary btn-sm mt-1 mb-1" type="submit" value="Dislike">
-      </form>
-      {% else%}
-      <!-- book disliked -->
-      <form action="{{ url_for('books.review_book', book_id=book_id, action='add_like') }}" method="POST">
-        <input class="btn btn-secondary btn-sm mt-1 mb-1" type="submit" value="Like">
-      </form>
-      <form action="{{ url_for('books.review_book', book_id=book_id, action='rm_dislike') }}" method="POST">
-        <input class="btn btn-primary btn-sm mt-1 mb-1 btn-danger" type="submit" value="Dislike">
-      </form>
-      {% endif %}
+    {% if book not in current_user.books_disliked %}
+    <!-- book not reviewed -->
+    <form action="{{ url_for('books.review_book', book_id=book_id, action='add_like') }}" method="POST">
+      <input class="btn btn-secondary btn-sm mt-1 mb-1" type="submit" value="Like">
+    </form>
+    <form action="{{ url_for('books.review_book', book_id=book_id, action='add_dislike') }}" method="POST">
+      <input class="btn btn-secondary btn-sm mt-1 mb-1" type="submit" value="Dislike">
+    </form>
+    {% else%}
+    <!-- book disliked -->
+    <form action="{{ url_for('books.review_book', book_id=book_id, action='add_like') }}" method="POST">
+      <input class="btn btn-secondary btn-sm mt-1 mb-1" type="submit" value="Like">
+    </form>
+    <form action="{{ url_for('books.review_book', book_id=book_id, action='rm_dislike') }}" method="POST">
+      <input class="btn btn-primary btn-sm mt-1 mb-1 btn-danger" type="submit" value="Dislike">
+    </form>
+    {% endif %}
     {% else %}
 
     <!-- book liked -->

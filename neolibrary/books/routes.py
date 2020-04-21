@@ -30,7 +30,7 @@ def new_book():
             if not picture_file:
                 form.link.errors.append("Error requesting file")
                 return render_template('create_book.html', title='New Book',
-                                       form=form, legend='New Book', image_folder=book_covers, sidebar=sidebar())
+                                       form=form, legend='New Book', book_covers=book_covers, sidebar=sidebar())
 
         book = match_book("create (b:Book) return b", 'b')
         if not book:
@@ -72,7 +72,7 @@ def new_book():
         flash('Your book has been created!', 'success')
         return redirect(url_for('books.new_book'))
     return render_template('create_book.html', title='New Book',
-                           form=form, legend='New Book', image_folder=book_covers,
+                           form=form, legend='New Book', book_covers=book_covers,
                            sidebar=sidebar())
 
 
@@ -81,7 +81,7 @@ def book(book_id):
     book = Book().match(graph).where("id(_)=%d"%book_id).first()
     if not book:
         return render_template('no_such_item.html', item="Book")
-    return render_template('book.html', title="Details",book=book, book_id=book_id, image_folder=book_covers, sidebar=sidebar())
+    return render_template('book.html', title="Details",book=book, book_id=book_id, book_covers=book_covers, sidebar=sidebar())
 
 
 @books.route("/book/<int:book_id>/update", methods=['GET', 'POST'])

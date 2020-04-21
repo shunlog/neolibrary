@@ -18,14 +18,6 @@ class Book(GraphObject):
     count = graph.run("match(n:Book) return count(n)").evaluate()
     pages = count // n_limit if count % n_limit == 0 else count // n_limit + 1
 
-    def pages_recommended(self, username):
-        count_recommended = graph.run('''match (b1:Book)<-[:WROTE]-(:Author)-[:WROTE]->(b_liked:Book)<-[:LIKED]-(u:User{username:"'''+username+'''"})
-                            where not (u)-[]->(b1)
-                            return count(b1)''').evaluate()
-        pages = count_recommended // self.n_limit if\
-                count_recommended % self.n_limit == 0 else\
-                count_recommended // self.n_limit + 1
-        return pages
 
     def get_id(self):
         s = str(self.__node__)

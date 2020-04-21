@@ -12,7 +12,7 @@ tags = Blueprint('tags', __name__)
 def tag(tag_id):
     tag = Tag().match(graph).where("id(_)=%d"%tag_id).first()
     if tag:
-        return render_template('tag.html', title="Details",tag=tag, tag_id=tag_id, image_folder=book_covers, sidebar=sidebar())
+        return render_template('tag.html', title="Details",tag=tag, tag_id=tag_id, book_covers=book_covers, sidebar=sidebar())
     return render_template('no_such_item.html', item="Tag")
 
 

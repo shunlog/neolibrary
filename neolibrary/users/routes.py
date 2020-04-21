@@ -57,7 +57,7 @@ def logout():
 @login_required
 def account():
     return render_template('account.html', title='Account',
-                           image_folder=profile_pics)
+                           profile_pics=profile_pics)
 
 @users.route("/account/edit", methods=['GET', 'POST'])
 @login_required
@@ -78,7 +78,7 @@ def edit_account():
         form.username.data = current_user.username
         form.email.data = current_user.email
     return render_template('edit_account.html', title='Account',
-                           image_folder=profile_pics, form=form)
+                           profile_pics=profile_pics, form=form)
 
 
 @users.route("/list_users", methods=['GET','POST'])
@@ -100,4 +100,4 @@ def list_users():
                 flash(str(count)+' users have been deleted!', 'success')
         return redirect(url_for('users.list_users'))
 
-    return render_template('list_users.html', users=users, image_folder=profile_pics)
+    return render_template('list_users.html', users=users, profile_pics=profile_pics)

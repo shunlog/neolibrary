@@ -12,7 +12,7 @@ authors = Blueprint('authors', __name__)
 def author(author_id):
     author = Author().match(graph).where("id(_)=%d"%author_id).first()
     if author:
-        return render_template('author.html', title="Details",author=author, author_id=author_id, image_folder=book_covers, sidebar=sidebar())
+        return render_template('author.html', title="Details",author=author, author_id=author_id, book_covers=book_covers, sidebar=sidebar())
     return render_template('no_such_item.html', item="Author")
 
 

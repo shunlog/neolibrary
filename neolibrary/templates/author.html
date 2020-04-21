@@ -17,11 +17,11 @@
           <div class="row no-gutters">
             <div class="col-md-12">
               {% if book.image_file %}
-              <img src="{{ '../' + image_folder + book.image_file }}"
+  <img src="{{ url_for('static', filename= book_covers+ book.image_file) }}"
                    class="img-fluid mx-auto d-block card-img-top"
                    alt="Image is not available">
               {% else %}
-              <img src="{{ '../' + image_folder + 'default.png' }}"
+  <img src="{{ url_for('static', filename= book_covers+ 'default.png') }}"
                    class="img-fluid card-img-top"
                    alt="Image is not available">
               {% endif %}

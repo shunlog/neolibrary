@@ -2,15 +2,15 @@
 {% block content %}
 <div class="content-section">
   <div class="media">
-      {% if current_user.image_file %}
-      <img src="{{'../' + image_folder + current_user.image_file }}"
-           class="rounded-circle account-img"
-           alt="Image is not available">
-      {% else %}
-      <img src="{{'../' + image_folder + 'default.png' }}"
-           class="rounded-circle account-img"
-           alt="Image is not available">
-      {% endif %}
+    {% if current_user.image_file %}
+    <img src="{{ url_for('static', filename= profile_pics+ current_user.image_file) }}"
+         class="rounded-circle account-img"
+         alt="Image is not available">
+    {% else %}
+    <img src="{{ url_for('static', filename= profile_pics+ 'default.png') }}"
+         class="rounded-circle account-img"
+         alt="Image is not available">
+    {% endif %}
     <div class="media-body">
       <h2 class="account-heading">{{ current_user.username }}</h2>
       <p class="text-secondary">{{ current_user.email }}</p>
