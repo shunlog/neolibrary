@@ -52,26 +52,9 @@ def save_book_cover(new_pic):
     picture_path = os.path.join(app.root_path, 'static/', book_covers, picture_fn)
 
     image = Image.open(new_pic)
-    w, h = image.size
-    wr = 2
-    hr = 3
-    ratio = wr/hr
 
-    if w > h*ratio:
-        print("width larger")
-        left = (w - h*(wr/hr))/2
-        top = 0
-        print("Cropping",left,"from left")
-        crop = image.crop((left, top, w-left, h-top))
-    else:
-        print("height larger")
-        top = (h - w*(hr/wr))/2
-        left = 0
-        print("Cropping",top,"from top")
-        crop = image.crop((left, top, w-left, h-top))
-
-    crop.thumbnail([1000, 1500])
-    crop.save(picture_path)
+    cropped = crop_picture(image)
+    cropped.save(picture_path)
     return picture_fn
 
 def download_book_cover(url):
@@ -90,26 +73,8 @@ def download_book_cover(url):
         return None
 
     image = Image.open(picture_path)
-    w, h = image.size
-    wr = 2
-    hr = 3
-    ratio = wr/hr
-
-    if w > h*ratio:
-        print("width larger")
-        left = (w - h*(wr/hr))/2
-        top = 0
-        print("Cropping",left,"from left")
-        crop = image.crop((left, top, w-left, h-top))
-    else:
-        print("height larger")
-        top = (h - w*(hr/wr))/2
-        left = 0
-        print("Cropping",top,"from top")
-        crop = image.crop((left, top, w-left, h-top))
-
-    crop.thumbnail([1000, 1500])
-    crop.save(picture_path)
+    cropped = crop_picture(image)
+    cropped.save(picture_path)
     return picture_fn
 
 
@@ -121,3 +86,25 @@ def delete_book_cover(old_picture):
         return True
     except:
         return False
+
+def crop_picture(image):
+    w, h = image.size
+    wr = 2
+    hr = 3
+    ratio = wr/hr
+
+    if w > h*ratio:
+        print("width larger")
+        left = (w - h*(wr/hr))/2
+        top = 0
+        print("Cropping",left,"from left")
+        cropped = image.crop((left, top, w-left, h-top))
+    else:
+        print("height larger")
+        top = (h - w*(hr/wr))/2
+        left = 0
+        print("Cropping",top,"from top")
+        cropped = image.crop((left, top, w-left, h-top))
+
+    cropped.thumbnail([1000, 1500])
+    return cropped
