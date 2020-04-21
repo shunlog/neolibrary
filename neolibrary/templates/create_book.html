@@ -75,8 +75,12 @@
 
 <script type="text/javascript">
   $(function() {
-      jQuery(".tm-input#form-authors").tagsManager({output: "#hidden_authors_id"});
-      jQuery(".tm-input#form-tags").tagsManager({output: "#hidden_tags_id"});
+      jQuery(".tm-input#form-authors").tagsManager({
+          {% if prefilled %} prefilled: {{ prefilled|safe }}.authors, {% endif %}
+          output: "#hidden_authors_id"});
+      jQuery(".tm-input#form-tags").tagsManager({
+          {% if prefilled %} prefilled: {{ prefilled|safe }}.tags, {% endif %}
+          output: "#hidden_tags_id"});
 
       $('#form-tags').autocomplete({source:""});
       $('#form-authors').autocomplete({source:""});
@@ -84,9 +88,7 @@
       $("input").keyup(function(data){
 
           var authors_ls = $('#form-authors').tagsManager('tags');
-          console.log('authors_ls',authors_ls);
           var tags_ls = $('#form-tags').tagsManager('tags');
-          console.log('tags_ls',tags_ls);
 
           var search_tags = $('#form-tags').val();
           var search_authors = $('#form-authors').val();

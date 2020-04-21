@@ -1,5 +1,6 @@
 import os
 import secrets
+from json import dumps
 from flask import render_template, url_for, flash, redirect, request, Blueprint
 from flask import current_app as app
 from flask_login import current_user, login_required
@@ -18,7 +19,6 @@ def new_book():
         flash(f'Admin account required!', 'danger')
         return redirect(url_for('main.home'))
 
-    print(current_user.is_admin)
     form = BookForm()
     if form.validate_on_submit():
 
@@ -44,7 +44,7 @@ def new_book():
         # if the title is same
         book.title=form.title.data.strip()
 
-        authors_ls=form.authors.data
+        authors_ls=form.hidden_authors.data
         for a_name in authors_ls.split(','):
             a_name = a_name.strip()
             author = Author().match(graph, a_name).first()
@@ -55,8 +55,8 @@ def new_book():
                 book.authors.add(author)
             elif a_name != '':
                 book.authors.add(author)
-        tags_ls=form.tags.data
-        for t_name in tags_ls.split('#'):
+        tags_ls=form.hidden_tags.data
+        for t_name in tags_ls.split(','):
             t_name = t_name.strip()
             tag = Tag().match(graph, t_name).first()
             if (not tag) and (t_name != ''):
@@ -121,6 +121,7 @@ def update_book(book_id):
         authors_ls=form.hidden_authors.data
         for a_name in authors_ls.split(','):
             a_name = a_name.strip()
+            a_name = " ".join(a_name.split())
             author = Author().match(graph, a_name).first()
             if (not author) and (a_name != ''):
                 author = Author()
@@ -133,6 +134,7 @@ def update_book(book_id):
         tags_ls=form.hidden_tags.data
         for t_name in tags_ls.split(','):
             t_name = t_name.strip()
+            t_name = " ".join(t_name.split())
             tag = Tag().match(graph, t_name).first()
             if (not tag) and (t_name != ''):
                 tag = Tag()
@@ -148,17 +150,23 @@ def update_book(book_id):
 
     elif book and request.method == 'GET':
         form.title.data = book.title
+
+        prefilled={}
         authors_ls = []
         for a in book.authors:
             authors_ls.append(a.name)
-        #form.hidden_authors.data = ','.join(authors_ls)
+        prefilled['authors'] = ','.join(authors_ls)
 
         tags_ls = []
         for t in book.tags:
             tags_ls.append(t.name)
-        #form.hidden_tags.data = ','.join(tags_ls)
+        prefilled['tags'] = ','.join(tags_ls)
+
+        prefilled = dumps(prefilled)
+        print(prefilled)
+
         return render_template('create_book.html', title='Update Book',
-                               form=form, legend='Update Book', sidebar=sidebar())
+                               form=form, legend='Update Book', sidebar=sidebar(), prefilled=prefilled)
     elif not book:
         return render_template('no_such_item.html', item=book)
 

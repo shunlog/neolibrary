@@ -65,7 +65,7 @@ def list_tags():
             a_obj = Tag().match(graph, a_name).first()
             graph.delete(a_obj)
             print("Deleted node ",a_obj.__node__)
-            flash(str(count)+' tags have been deleted!', 'success')
+        flash(str(count)+' tags have been deleted!', 'success')
         return redirect(url_for('tags.list_tags'))
 
     return render_template('list_tags.html', tags=tags, sidebar=sidebar())
