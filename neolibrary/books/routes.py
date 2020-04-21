@@ -90,24 +90,35 @@ def update_book(book_id):
     if not current_user.is_admin:
         flash(f'Admin account required!', 'danger')
         return redirect(url_for('main.home'))
+
     book = Book().match(graph).where("id(_)=%d"%book_id).first()
     form = BookForm()
+
     if book and form.validate_on_submit():
+        # picture
         if form.picture.data:
             delete_book_cover(book.image_file)
             picture_file = save_book_cover(form.picture.data)
             book.image_file = picture_file
+
+        # title
         book.title=form.title.data
 
         # delete previous authors
         authors_to_remove = []
         for a in book.authors:
-            print(a.__node__)
             authors_to_remove.append(a)
         for a in authors_to_remove:
             book.authors.remove(a)
 
-        authors_ls=form.authors.data
+        # delete previous tags
+        tags_to_remove = []
+        for t in book.tags:
+            tags_to_remove.append(t)
+        for t in tags_to_remove:
+            book.tags.remove(t)
+
+        authors_ls=form.hidden_authors.data
         for a_name in authors_ls.split(','):
             a_name = a_name.strip()
             author = Author().match(graph, a_name).first()
@@ -118,9 +129,9 @@ def update_book(book_id):
                 book.authors.add(author)
             elif a_name != '':
                 book.authors.add(author)
-        tags_ls=form.tags.data
 
-        for t_name in tags_ls.split('#'):
+        tags_ls=form.hidden_tags.data
+        for t_name in tags_ls.split(','):
             t_name = t_name.strip()
             tag = Tag().match(graph, t_name).first()
             if (not tag) and (t_name != ''):
@@ -134,17 +145,18 @@ def update_book(book_id):
         graph.push(book)
         flash('The book has been updated!', 'success')
         return redirect(url_for('books.book', book_id=book_id))
+
     elif book and request.method == 'GET':
         form.title.data = book.title
         authors_ls = []
         for a in book.authors:
             authors_ls.append(a.name)
-        form.authors.data = ','.join(authors_ls)
+        #form.hidden_authors.data = ','.join(authors_ls)
 
         tags_ls = []
         for t in book.tags:
             tags_ls.append(t.name)
-        form.tags.data = '#'.join(tags_ls)
+        #form.hidden_tags.data = ','.join(tags_ls)
         return render_template('create_book.html', title='Update Book',
                                form=form, legend='Update Book', sidebar=sidebar())
     elif not book:

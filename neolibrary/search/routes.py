@@ -1,13 +1,19 @@
-from flask import render_template, url_for, flash, redirect, request, abort, Blueprint
+from flask import render_template, url_for, flash, redirect, request, abort, Blueprint, jsonify
 from flask_login import current_user, login_required
 from neolibrary import graph, book_covers
 from neolibrary.main.utils import sidebar
 from neolibrary.models import Book, Author, User, Tag
 from neolibrary.search.forms import SearchForm
+from neolibrary.search.utils import str_to_regexp
 from neolibrary.books.utils import data_to_obj_ls, iter_pages
 
 search_bl = Blueprint('search', __name__)
 n_limit = Book.n_limit
+
+@search_bl.route("/test", methods=['GET', 'POST'])
+def test():
+    search = SearchForm(request.form)
+    return render_template('test.html', form=search)
 
 @search_bl.route("/search", methods=['GET', 'POST'])
 def search():
@@ -19,11 +25,8 @@ def search():
     # match romanian chars
 
     if search_str and search_str != '':
-        print(search_str)
-        search_regexp = search_str.replace('a', '[aâă]').replace('A', '[AÂĂ]').replace('t', '[tț]').replace('T', '[TȚ]').replace('s', '[sș]').replace('S', '[SȘ]').replace('i', '[iȋ]').replace('I', '[IȊ]')
-        search_regexp = "(?i).*" + search_str + ".*"
-        print(search_regexp)
 
+        search_regexp = str_to_regexp(search_str)
 
         query = "match (a:Author)-->(b:Book)\
             where b.title=~$search_str \
@@ -63,3 +66,25 @@ def search():
     books = data_to_obj_ls(dt)
     return render_template('search.html', form=search, title="Search", search=search_str,
                         books=books, image_folder=book_covers)
+
+@search_bl.route('/autocomplete', methods=['GET','POST'])
+def autocomplete():
+    if request.method == "POST":
+        search_str_tags = request.form['search_tags']
+        search_str_authors = request.form['search_authors']
+
+        search_regexp_tags = str_to_regexp(search_str_tags)
+        search_regexp_authors = str_to_regexp(search_str_authors)
+
+        tags = Tag().match(graph).where('_.name =~ "{}"'.format(search_regexp_tags))
+        tags_ls = []
+        for t in tags:
+            tags_ls.append(t.name)
+
+        authors = Author().match(graph).where('_.name =~ "{}"'.format(search_regexp_authors))
+        authors_ls = []
+        for a in authors:
+            authors_ls.append(a.name)
+
+        obj = {'tags':tags_ls, 'authors': authors_ls}
+        return jsonify(json_list=obj)

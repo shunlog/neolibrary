@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 {% block content %}
 <div class="content-section">
-  <form method="POST" action="" enctype="multipart/form-data">
+  <form method="POST" action="" enctype="multipart/form-data" id="form">
     {{ form.hidden_tag() }}
     <fieldset class="form-group">
       <legend class="border-bottom mb-4">{{ legend }}</legend>
@@ -22,28 +22,28 @@
       <div class="form-group">
         {{ form.authors.label(class="form-control-label") }}
         {% if form.authors.errors %}
-        {{ form.authors(class="form-control form-control-lg is-invalid") }}
+        {{ form.authors(id="form-authors", class="form-control form-control-lg tm-input is-invalid") }}
         <div class="invalid-feedback">
           {% for error in form.authors.errors %}
           <span>{{ error }}</span>
           {% endfor %}
         </div>
         {% else %}
-        {{ form.authors(class="form-control form-control-lg") }}
+        {{ form.authors(id="form-authors", class="form-control form-control-lg tm-input") }}
         {% endif %}
       </div>
 
       <div class="form-group">
         {{ form.tags.label(class="form-control-label") }}
         {% if form.tags.errors %}
-        {{ form.tags(class="form-control form-control-lg is-invalid") }}
+        {{ form.tags(class="tm-input form-control form-control-lg is-invalid", id="form-tags") }}
         <div class="invalid-feedback">
           {% for error in form.tags.errors %}
           <span>{{ error }}</span>
           {% endfor %}
         </div>
         {% else %}
-        {{ form.tags(class="form-control form-control-lg") }}
+        {{ form.tags(class="tm-input form-control form-control-lg", id="form-tags") }}
         {% endif %}
       </div>
 
@@ -72,4 +72,42 @@
     </div>
   </form>
 </div>
-{% endblock content %}
+
+<script type="text/javascript">
+  $(function() {
+      jQuery(".tm-input#form-authors").tagsManager({output: "#hidden_authors_id"});
+      jQuery(".tm-input#form-tags").tagsManager({output: "#hidden_tags_id"});
+
+      $('#form-tags').autocomplete({source:""});
+      $('#form-authors').autocomplete({source:""});
+
+      $("input").keyup(function(data){
+
+          var authors_ls = $('#form-authors').tagsManager('tags');
+          console.log('authors_ls',authors_ls);
+          var tags_ls = $('#form-tags').tagsManager('tags');
+          console.log('tags_ls',tags_ls);
+
+          var search_tags = $('#form-tags').val();
+          var search_authors = $('#form-authors').val();
+          $.ajax({
+              type : 'POST',
+              url: '{{ url_for("search.autocomplete") }}',
+              data: {"search_tags":search_tags, "search_authors":search_authors},
+          }).done(function (data) {
+              $('#form-tags').autocomplete({
+                  source: data.json_list['tags'],
+                  minLength: 1
+              });
+              $('#form-authors').autocomplete({
+                  source: data.json_list['authors'],
+                  minLength: 1
+              });
+          });
+
+      }) 
+  });
+</script>
+
+<script src = "{{url_for('static', filename='tags_manager/tagmanager.js')}}" type = "text/javascript">
+  {% endblock content %}

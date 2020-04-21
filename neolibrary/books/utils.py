@@ -19,18 +19,17 @@ def match_book(query, node):
         print("Error running query!")
 
 def data_to_obj_ls(dt):
-    # this function is very very VERY bad
     ls = []
     print(dt)
     for node in dt:
-        print(node)
+        print("Node:",node)
         if type(node).__name__ == "Record":
-            print("Record: ",node[0])
+            print("Record:",node[0])
             book = Book().wrap(node[0])
             ls.append(book)
         else:
             for key in node:
-                print("Dict",node[key])
+                print("Dict:",node[key])
                 book = Book().wrap(node[key])
                 break # if there are more returns, usually count of something
             ls.append(book)
