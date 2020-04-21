@@ -22,28 +22,32 @@
       <div class="form-group">
         {{ form.authors.label(class="form-control-label") }}
         {% if form.authors.errors %}
-        {{ form.authors(id="form-authors", class="form-control form-control-lg tm-input is-invalid") }}
+        {{ form.authors(id="form-authors", class="tm-input form-control
+        form-control-lg is-invalid tm-input-success tm-input-small") }}
         <div class="invalid-feedback">
           {% for error in form.authors.errors %}
           <span>{{ error }}</span>
           {% endfor %}
         </div>
         {% else %}
-        {{ form.authors(id="form-authors", class="form-control form-control-lg tm-input") }}
+        {{ form.authors(id="form-authors", class="tm-input form-control
+        form-control-lg tm-input-success tm-input-small") }}
         {% endif %}
       </div>
 
       <div class="form-group">
         {{ form.tags.label(class="form-control-label") }}
         {% if form.tags.errors %}
-        {{ form.tags(class="tm-input form-control form-control-lg is-invalid", id="form-tags") }}
+        {{ form.tags(class="tm-input form-control form-control-lg is-invalid
+        tm-input-info tm-input-small", id="form-tags") }}
         <div class="invalid-feedback">
           {% for error in form.tags.errors %}
           <span>{{ error }}</span>
           {% endfor %}
         </div>
         {% else %}
-        {{ form.tags(class="tm-input form-control form-control-lg", id="form-tags") }}
+        {{ form.tags(class="tm-input form-control form-control-lg tm-tag-info
+        tm-input-info tm-input-small", id="form-tags") }}
         {% endif %}
       </div>
 
