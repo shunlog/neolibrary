@@ -5,6 +5,8 @@ test.py
 neolibrary/static/*/*
 !*/static/*/default.png
 !*/static/*/default.jpg
+!*/static/tags_manager/tagmanager.js
+!*/static/tags_manager/tagmanager.css
 test.py
 
 *.pyc
