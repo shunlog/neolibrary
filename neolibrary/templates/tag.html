@@ -12,8 +12,8 @@
     <h2 class="article-title">#{{ tag.name }}</h2>
     <div class="row">
       {% for book in tag.books %}
-      <div class="col-xl-3 col-sm-6">
-        <div class="card " >
+      <div class="col-md-2 col-sm-3 col-4">
+        <div class="card d-100 d-flex" >
           <div class="row no-gutters">
             <div class="col-md-12">
               {% if book.image_file %}
@@ -36,8 +36,6 @@
       </div>
       {% endfor%}
     </div>
-
-    <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{{ url_for('tags.tag', tag_id=tag_id) }}">Like</a>
   </div>
 </article>
 <!-- Modal -->
