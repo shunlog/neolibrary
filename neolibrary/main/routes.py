@@ -46,7 +46,7 @@ def home():
         query = "match(b:Book) optional match (b)--(u:User) return b, count(u)\
                 order by count(u) desc, b.title limit $limit"
         dt = graph.run(query,limit=n_limit)
-        books = [Book.wrap(node[0]) for node,c in dt]
+        books = [Book.wrap(node) for node,c in dt]
 
         return render_template('home.html', title='Home',sidebar=sidebar,
                                 books=books, book_covers=book_covers)
