@@ -6,7 +6,7 @@
     <div class="content-section">
       <h3>Discover</h3>
 
-      <p class='text-muted'>Authors:
+      <p class='text-muted'>New authors:
         <ul class="list-group">
           {% for author in sidebar['authors'] %}
           <li class="list-group-item list-group-item-light">
@@ -16,17 +16,7 @@
           <li class="list-group-item list-group-item-light"><a href="google.com">more ...</a></li>
         </ul>
       </p>
-      <p class='text-muted'>Books:
-        <ul class="list-group">
-          {% for book in sidebar['books'] %}
-          <li class="list-group-item list-group-item-light">
-            <a href="{{ url_for('books.book', book_id=book.get_id()) }}">{{ book.title }}</a>
-          </li>
-          {% endfor %}
-          <li class="list-group-item list-group-item-light"><a href="google.com">more ...</a></li>
-        </ul>
-      </p>
-      <p class='text-muted'>Tags:
+      <p class='text-muted'>New tags:
         <ul class="list-group">
           {% for tag in sidebar['tags'] %}
           <li class="list-group-item list-group-item-light">

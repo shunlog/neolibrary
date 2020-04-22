@@ -13,6 +13,7 @@ n_limit = Book.n_limit
 def home():
     if current_user.is_authenticated:
         sidebar = init_sidebar(current_user)
+
         books_recommended = {}
         query = "match (b:Book)<-[:LIKED]-(:User)-[:LIKED]->(c:Book)<-[:LIKED]-(u:User)\
                     where u.username=$username and not (u)-->(b)\
@@ -38,7 +39,7 @@ def home():
         dt = graph.run(query, username=current_user.username, limit=n_limit)
         books_recommended["authors"] = [Book.wrap(node) for node,c in dt]
 
-        return render_template('home.html', title='home',sidebar=sidebar,
+        return render_template('home.html', title='Home',sidebar=sidebar,
                                 books_recommended=books_recommended, book_covers=book_covers)
     else:
         sidebar = init_sidebar(None)
@@ -47,6 +48,6 @@ def home():
         dt = graph.run(query,limit=n_limit)
         books = [Book.wrap(node[0]) for node,c in dt]
 
-        return render_template('home.html', title='home',sidebar=sidebar,
+        return render_template('home.html', title='Home',sidebar=sidebar,
                                 books=books, book_covers=book_covers)
 
