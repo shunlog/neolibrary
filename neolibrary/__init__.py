@@ -37,6 +37,7 @@ def create_app(config_class=Config):
         from neolibrary.authors.routes import authors
         from neolibrary.tags.routes import tags
         from neolibrary.search.routes import search_bl
+        from neolibrary.test.routes import test
 
         app.register_blueprint(main)
         app.register_blueprint(users)
@@ -44,5 +45,6 @@ def create_app(config_class=Config):
         app.register_blueprint(authors)
         app.register_blueprint(tags)
         app.register_blueprint(search_bl)
+        app.register_blueprint(test)
 
         return app

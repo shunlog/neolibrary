@@ -18,24 +18,6 @@ def match_book(query, node):
     except:
         print("Error running query!")
 
-def data_to_obj_ls(dt):
-    ls = []
-    for node in dt:
-        if type(node).__name__ == "Record":
-            print("Record:",node)
-            print(node[0])
-            print()
-            book = Book().wrap(node[0])
-            ls.append(book)
-        else:
-            for key in node:
-                print("Dict:",node)
-                print(node[key])
-                print()
-                book = Book().wrap(node[key])
-                break # if there are more returns, usually count of something
-            ls.append(book)
-    return ls
 
 def iter_pages(pages, current_page, left_edge=1, right_edge=1, left_current=1, right_current=1):
     ls = [i for i in range(1,pages+1)]

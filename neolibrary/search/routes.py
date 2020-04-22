@@ -4,20 +4,14 @@ from neolibrary import graph, book_covers
 from neolibrary.models import Book, Author, User, Tag
 from neolibrary.search.forms import SearchForm
 from neolibrary.search.utils import str_to_regexp
-from neolibrary.books.utils import data_to_obj_ls, iter_pages
+from neolibrary.books.utils import iter_pages
 
 search_bl = Blueprint('search', __name__)
 n_limit = Book.n_limit
 
-@search_bl.route("/test", methods=['GET', 'POST'])
-def test():
-    search = SearchForm(request.form)
-    return render_template('test.html', form=search)
-
 @search_bl.route("/search", methods=['GET', 'POST'])
 def search():
 
-    print("================================================")
     search = SearchForm(request.form)
     page = request.args.get('page',1, type=int)
     search_str = request.args.get('search', type=str)
@@ -37,8 +31,8 @@ def search():
             where a.name=~$search_str \
             return distinct b"
 
-        dt = graph.run(query,search_str=search_regexp).data()
-        books = data_to_obj_ls(dt)
+        dt = graph.run(query,search_str=search_regexp)
+        books = [Book.wrap(node[0]) for node in dt]
 
         count = len(books)
         pages = count // n_limit if count % n_limit == 0 else count // n_limit + 1
@@ -61,8 +55,8 @@ def search():
     query = "match(b:Book) optional match (b)--(u:User) return b, count(u)\
             order by count(u) desc, b.title limit $limit"
 
-    dt = graph.run(query,limit=n_limit).data()
-    books = data_to_obj_ls(dt)
+    dt = graph.run(query,limit=n_limit)
+    books = [Book.wrap(node[0]) for node in dt]
     return render_template('search.html', form=search, title="Search", search=search_str,
                         books=books, book_covers=book_covers)
 

@@ -7,7 +7,7 @@ from flask_login import current_user, login_required
 from neolibrary import graph, book_covers
 from neolibrary.books.forms import BookForm
 from neolibrary.models import Book, Author, Tag
-from neolibrary.books.utils import match_book, data_to_obj_ls, save_book_cover, download_book_cover, delete_book_cover
+from neolibrary.books.utils import match_book, save_book_cover, download_book_cover, delete_book_cover
 
 books = Blueprint('books', __name__)
 
