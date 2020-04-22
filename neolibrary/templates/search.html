@@ -3,10 +3,11 @@
 
 <form method="GET">
   <div class="input-group mb-3">
-    {{ form.search(class="form-control") }}
-    <div class="input-group-apend">
-      <button type="submit" value="Search" class="btn btn-outline-secondary">Search</button>
+    <div class="input-group-prepend">
+      {{ form.select(class="btn btn-outline-secondary dropdown-toggle", type="button") }}
     </div>
+    {{ form.search(class="form-control") }}
+      <button type="submit" value="Search" class="btn btn-outline-secondary">Search</button>
   </div>
 </form>
 
@@ -16,7 +17,7 @@
 {% endif %}
 <div class="row">
   {% for book in books %}
-  <div class="col-md-3 col-sm-4 col-6">
+  <div class="col-md-2 col-sm-3 col-4">
     <div class="card d-100 d-flex" >
       <div class="row no-gutters">
 
