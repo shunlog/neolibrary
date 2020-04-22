@@ -1,101 +1,139 @@
 {% extends "layout.html" %}
 {%block content %}
-{% if books %}
-<h3>Most popular:</h3>
 <div class="row">
-  {% for book in books %}
-  <div class="col-xl-3 col-md-4 col-sm-6">
-    <div class="card d-100 d-flex" >
-      <div class="row no-gutters">
 
-        <div class="col-sm-12">
-          <a href="{{ url_for('books.book', book_id=book.get_id()) }}" class="card-title">
-            {% if book.image_file %}
-            <img src="{{ url_for('static', filename= book_covers+ book.image_file) }}"
-                 class="img-fluid mx-auto d-block card-img-top"
-                 alt="Image is not available">
-            {% else %}
-            <img src="{{ url_for('static', filename= book_covers+ 'default.png') }}"
-                 class="img-fluid card-img-top"
-                 alt="Image is not available">
-            {% endif %}
-          </a>
-        </div>
+  <div class="col-md-3">
+    <div class="content-section">
+      <h3>Discover</h3>
 
-        <div class="col-md-12">
-          <div class="card-body">
-            <a href="{{ url_for('books.book', book_id=book.get_id()) }}" class="card-title">
-              <h5 >{{ book.title }}</h5>
-            </a>
-            <p class="card-text">By
-              {% for author in book.authors %}
-              <a href="{{ url_for('authors.author', author_id=author.get_id()) }}">{{ author.name }}</a>
-              {% endfor %}
-            </p>
-          </div>
-        </div>
-
-      </div>
+      <p class='text-muted'>Authors:
+        <ul class="list-group">
+          {% for author in sidebar['authors'] %}
+          <li class="list-group-item list-group-item-light">
+            <a href="{{ url_for('authors.author', author_id=author.get_id()) }}">{{ author.name }}</a>
+          </li>
+          {% endfor %}
+          <li class="list-group-item list-group-item-light"><a href="google.com">more ...</a></li>
+        </ul>
+      </p>
+      <p class='text-muted'>Books:
+        <ul class="list-group">
+          {% for book in sidebar['books'] %}
+          <li class="list-group-item list-group-item-light">
+            <a href="{{ url_for('books.book', book_id=book.get_id()) }}">{{ book.title }}</a>
+          </li>
+          {% endfor %}
+          <li class="list-group-item list-group-item-light"><a href="google.com">more ...</a></li>
+        </ul>
+      </p>
+      <p class='text-muted'>Tags:
+        <ul class="list-group">
+          {% for tag in sidebar['tags'] %}
+          <li class="list-group-item list-group-item-light">
+            <a href="{{ url_for('tags.tag', tag_id=tag.get_id()) }}">{{ tag.name }}</a>
+          </li>
+          {% endfor %}
+          <li class="list-group-item list-group-item-light"><a href="google.com">more ...</a></li>
+        </ul>
+      </p>
     </div>
   </div>
-  {% endfor%}
-</div>
 
-{% else %}
+  <div class="col-md-9 ">
+    {% if books %}
+    <h3>Most popular:</h3>
+    <div class="row">
+      {% for book in books %}
+      <div class="col-xl-3 col-md-4 col-sm-6">
+        <div class="card d-100 d-flex" >
+          <div class="row no-gutters">
 
-{% for key in books_recommended %}
-{% if key == "users" %}
-  <h2>User recommended books:</h2>
-{% elif key == "tags" %}
-  <h2>Related tags:</h2>
-{% elif key == "authors" %}
-  <h2>Related authors:</h2>
-{% endif %}
+            <div class="col-sm-12">
+              <a href="{{ url_for('books.book', book_id=book.get_id()) }}" class="card-title">
+                {% if book.image_file %}
+                <img src="{{ url_for('static', filename= book_covers+ book.image_file) }}"
+                     class="img-fluid mx-auto d-block card-img-top"
+                     alt="Image is not available">
+                {% else %}
+                <img src="{{ url_for('static', filename= book_covers+ 'default.png') }}"
+                     class="img-fluid card-img-top"
+                     alt="Image is not available">
+                {% endif %}
+              </a>
+            </div>
 
-{% if not books_recommended[key] %}
-  <p>Nothing here yet</p>
-{% endif %}
+            <div class="col-md-12">
+              <div class="card-body">
+                <a href="{{ url_for('books.book', book_id=book.get_id()) }}" class="card-title">
+                  <h5 >{{ book.title }}</h5>
+                </a>
+                <p class="card-text">By
+                  {% for author in book.authors %}
+                  <a href="{{ url_for('authors.author', author_id=author.get_id()) }}">{{ author.name }}</a>
+                  {% endfor %}
+                </p>
+              </div>
+            </div>
 
-<div class="row">
-  {% for book in books_recommended[key] %}
-  <div class="col-xl-3 col-md-4 col-sm-6">
-    <div class="card d-100 d-flex" >
-      <div class="row no-gutters">
-
-        <div class="col-sm-12">
-          <a href="{{ url_for('books.book', book_id=book.get_id()) }}" class="card-title">
-            {% if book.image_file %}
-            <img src="{{ url_for('static', filename= book_covers+ book.image_file) }}"
-                 class="img-fluid mx-auto d-block card-img-top"
-                 alt="Image is not available">
-            {% else %}
-            <img src="{{ url_for('static', filename= book_covers+ 'default.png') }}"
-                 class="img-fluid card-img-top"
-                 alt="Image is not available">
-            {% endif %}
-          </a>
-        </div>
-
-        <div class="col-md-12">
-          <div class="card-body">
-            <a href="{{ url_for('books.book', book_id=book.get_id()) }}" class="card-title">
-              <h5 >{{ book.title }}</h5>
-            </a>
-            <p class="card-text">By
-              {% for author in book.authors %}
-              <a href="{{ url_for('authors.author', author_id=author.get_id()) }}">{{ author.name }}</a>
-              {% endfor %}
-            </p>
           </div>
         </div>
-
       </div>
+      {% endfor%}
     </div>
+    {% else %}
+    {% for key in books_recommended %}
+    {% if key == "users" %}
+    <h2>User recommended books:</h2>
+    {% elif key == "tags" %}
+    <h2>Related tags:</h2>
+    {% elif key == "authors" %}
+    <h2>Related authors:</h2>
+    {% endif %}
+
+    {% if not books_recommended[key] %}
+    <p>Nothing here yet</p>
+    {% endif %}
+
+    <div class="row">
+      {% for book in books_recommended[key] %}
+      <div class="col-xl-3 col-md-4 col-sm-6">
+        <div class="card d-100 d-flex" >
+          <div class="row no-gutters">
+
+            <div class="col-sm-12">
+              <a href="{{ url_for('books.book', book_id=book.get_id()) }}" class="card-title">
+                {% if book.image_file %}
+                <img src="{{ url_for('static', filename= book_covers+ book.image_file) }}"
+                     class="img-fluid mx-auto d-block card-img-top"
+                     alt="Image is not available">
+                {% else %}
+                <img src="{{ url_for('static', filename= book_covers+ 'default.png') }}"
+                     class="img-fluid card-img-top"
+                     alt="Image is not available">
+                {% endif %}
+              </a>
+            </div>
+
+            <div class="col-md-12">
+              <div class="card-body">
+                <a href="{{ url_for('books.book', book_id=book.get_id()) }}" class="card-title">
+                  <h5 >{{ book.title }}</h5>
+                </a>
+                <p class="card-text">By
+                  {% for author in book.authors %}
+                  <a href="{{ url_for('authors.author', author_id=author.get_id()) }}">{{ author.name }}</a>
+                  {% endfor %}
+                </p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% endfor %}
+    {% endif %}
   </div>
-  {% endfor %}
-</div>
-{% endfor %}
 
-{% endif %}
-
-{% endblock content %}
+  {% endblock content %}

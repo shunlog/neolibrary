@@ -2,7 +2,6 @@ from flask import render_template, url_for, flash, redirect, request, Blueprint
 from flask import current_app as app
 from flask_login import current_user, login_required
 from neolibrary import graph, book_covers
-from neolibrary.main.utils import sidebar
 from neolibrary.models import Tag
 from neolibrary.tags.forms import TagForm
 
@@ -12,7 +11,7 @@ tags = Blueprint('tags', __name__)
 def tag(tag_id):
     tag = Tag().match(graph).where("id(_)=%d"%tag_id).first()
     if tag:
-        return render_template('tag.html', title="Details",tag=tag, tag_id=tag_id, book_covers=book_covers, sidebar=sidebar())
+        return render_template('tag.html', title="Details",tag=tag, tag_id=tag_id, book_covers=book_covers)
     return render_template('no_such_item.html', item="Tag")
 
 
@@ -33,9 +32,9 @@ def update_tag(tag_id):
     elif tag and request.method == 'GET':
         form.name.data = tag.name
         return render_template('update_tag.html', title='Update Tag',
-                               form=form, legend='Update Tag', sidebar=sidebar())
+                               form=form, legend='Update Tag')
     elif not tag:
-        return render_template('no_such_item.html', item="Tag", sidebar=sidebar())
+        return render_template('no_such_item.html', item="Tag")
 
 
 
@@ -68,7 +67,7 @@ def list_tags():
         flash(str(count)+' tags have been deleted!', 'success')
         return redirect(url_for('tags.list_tags'))
 
-    return render_template('list_tags.html', tags=tags, sidebar=sidebar())
+    return render_template('list_tags.html', tags=tags)
 
 
 @tags.route("/add_tags", methods=['GET','POST'])
@@ -79,4 +78,4 @@ def add_tags():
     if request.method == 'POST':
         books_ls = request.form.getlist('book')
 
-    return render_template('add_tags.html', sidebar=sidebar())
+    return render_template('add_tags.html')

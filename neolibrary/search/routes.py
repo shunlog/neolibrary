@@ -1,7 +1,6 @@
 from flask import render_template, url_for, flash, redirect, request, abort, Blueprint, jsonify
 from flask_login import current_user, login_required
 from neolibrary import graph, book_covers
-from neolibrary.main.utils import sidebar
 from neolibrary.models import Book, Author, User, Tag
 from neolibrary.search.forms import SearchForm
 from neolibrary.search.utils import str_to_regexp

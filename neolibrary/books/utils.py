@@ -20,16 +20,18 @@ def match_book(query, node):
 
 def data_to_obj_ls(dt):
     ls = []
-    print(dt)
     for node in dt:
-        print("Node:",node)
         if type(node).__name__ == "Record":
-            print("Record:",node[0])
+            print("Record:",node)
+            print(node[0])
+            print()
             book = Book().wrap(node[0])
             ls.append(book)
         else:
             for key in node:
-                print("Dict:",node[key])
+                print("Dict:",node)
+                print(node[key])
+                print()
                 book = Book().wrap(node[key])
                 break # if there are more returns, usually count of something
             ls.append(book)
@@ -94,16 +96,12 @@ def crop_picture(image):
     ratio = wr/hr
 
     if w > h*ratio:
-        print("width larger")
         left = (w - h*(wr/hr))/2
         top = 0
-        print("Cropping",left,"from left")
         cropped = image.crop((left, top, w-left, h-top))
     else:
-        print("height larger")
         top = (h - w*(hr/wr))/2
         left = 0
-        print("Cropping",top,"from top")
         cropped = image.crop((left, top, w-left, h-top))
 
     cropped.thumbnail([1000, 1500])

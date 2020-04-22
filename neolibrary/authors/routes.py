@@ -2,8 +2,7 @@ from flask import render_template, url_for, flash, redirect, request, Blueprint
 from flask import current_app as app
 from flask_login import current_user, login_required
 from neolibrary import graph, book_covers
-from neolibrary.main.utils import sidebar
-from neolibrary.models import Author 
+from neolibrary.models import Author
 from neolibrary.authors.forms import AuthorForm
 
 authors = Blueprint('authors', __name__)
@@ -12,7 +11,7 @@ authors = Blueprint('authors', __name__)
 def author(author_id):
     author = Author().match(graph).where("id(_)=%d"%author_id).first()
     if author:
-        return render_template('author.html', title="Details",author=author, author_id=author_id, book_covers=book_covers, sidebar=sidebar())
+        return render_template('author.html', title="Details",author=author, author_id=author_id, book_covers=book_covers)
     return render_template('no_such_item.html', item="Author")
 
 
@@ -33,9 +32,9 @@ def update_author(author_id):
     elif author and request.method == 'GET':
         form.name.data = author.name
         return render_template('update_author.html', title='Update Author',
-                               form=form, legend='Update Author', sidebar=sidebar())
+                               form=form, legend='Update Author')
     elif not author:
-        return render_template('no_such_item.html', item="Author", sidebar=sidebar())
+        return render_template('no_such_item.html', item="Author")
 
 
 
@@ -77,5 +76,4 @@ def list_authors():
             flash(str(count)+' authors have been deleted!', 'success')
             return redirect(url_for('authors.list_authors'))
 
-    return render_template('list_authors.html', authors=authors, sidebar=sidebar())
-    
+    return render_template('list_authors.html', authors=authors)
