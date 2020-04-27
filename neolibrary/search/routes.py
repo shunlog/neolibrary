@@ -30,7 +30,7 @@ def search():
 
             search_regexp = str_to_regexp(search_str)
 
-            query = "match (a:Author)-->(b:Book)\
+            query = "match (b:Book)\
                 where b.title=~$search_regexp \
                 return b union\
                 match (b)<--(t:Tag)\
