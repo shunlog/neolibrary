@@ -1,7 +1,7 @@
-from flask import render_template, Blueprint, request
+from flask import render_template, Blueprint, request, url_for
 from flask_login import current_user
 from neolibrary.models import Book
-from neolibrary import graph, book_covers
+from neolibrary import graph, book_covers, book_covers_path
 from neolibrary.main.utils import init_sidebar
 from neolibrary.models import Book
 from neolibrary.books.utils import match_book, iter_pages
@@ -9,8 +9,12 @@ from neolibrary.books.utils import match_book, iter_pages
 main = Blueprint('main', __name__)
 n_limit = Book.n_limit
 
+
 @main.route("/")
 def home():
+    global book_covers_path
+    if not book_covers_path:
+        book_covers_path = url_for('static', filename=book_covers)
     if current_user.is_authenticated:
         sidebar = init_sidebar(current_user)
 
@@ -40,7 +44,7 @@ def home():
         books_recommended["authors"] = [Book.wrap(node) for node,c in dt]
 
         return render_template('home.html', title='Home',sidebar=sidebar,
-                                books_recommended=books_recommended, book_covers=book_covers)
+                                books_recommended=books_recommended, book_covers_path=book_covers_path)
     else:
         sidebar = init_sidebar(None)
         query = "match(b:Book) optional match (b)--(u:User) return b, count(u)\
@@ -49,5 +53,4 @@ def home():
         books = [Book.wrap(node) for node,c in dt]
 
         return render_template('home.html', title='Home',sidebar=sidebar,
-                                books=books, book_covers=book_covers)
-
+                                books=books, book_covers_path=book_covers_path)

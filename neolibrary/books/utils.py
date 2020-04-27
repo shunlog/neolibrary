@@ -39,10 +39,11 @@ def save_book_cover(new_pic):
     cropped = crop_picture(image)
     cropped.save(picture_path)
 
-    ftp = FTP(host_ip, ftp_user, ftp_password)
-    ftp.cwd(host_dir+book_covers)
-    with open(picture_path, 'rb') as file:
-        ftp.storbinary(f'STOR {picture_fn}', file)
+    if ftp_user and ftp_password and host_ip and host_dir:
+        ftp = FTP(host_ip, ftp_user, ftp_password)
+        ftp.cwd(host_dir+book_covers)
+        with open(picture_path, 'rb') as file:
+            ftp.storbinary(f'STOR {picture_fn}', file)
 
     return picture_fn
 

@@ -22,6 +22,8 @@ ftp_user = Config.FTP_USER
 ftp_password = Config.FTP_PASSWORD
 host_ip = Config.HOST_IP
 host_dir = Config.HOST_DIR
+book_covers_path = Config.BOOK_COVERS_PATH
+profile_pics_path = 'acoperisperfect.md/test/profile_pics/'
 
 login_manager = LoginManager()
 login_manager.login_view = 'users.login'
