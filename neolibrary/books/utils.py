@@ -1,9 +1,10 @@
 import os
 import secrets
-import urllib.request
 from ftplib import FTP
 from pathlib import Path
+import urllib.request
 from itertools import groupby
+
 from flask import current_app as app
 from PIL import Image
 from neolibrary import graph, book_covers

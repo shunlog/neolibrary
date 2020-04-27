@@ -3,7 +3,7 @@ import secrets
 from flask import render_template, url_for, flash, redirect, request, Blueprint
 from flask import current_app as app
 from flask_login import login_user, current_user, logout_user, login_required
-from neolibrary import graph, bcrypt, profile_pics
+from neolibrary import graph, bcrypt, profile_pics, profile_pics_path
 from neolibrary.models import User
 from neolibrary.users.utils import crop_n_resize, save_profile_pic, delete_profile_pic
 from neolibrary.users.forms import RegistrationForm, LoginForm, UpdateAccountForm
@@ -56,12 +56,18 @@ def logout():
 @users.route("/account", methods=['GET', 'POST'])
 @login_required
 def account():
+    global profile_pics_path
+    if not profile_pics_path:
+        profile_pics_path = url_for('static', filename=profile_pics)
     return render_template('account.html', title='Account',
-                           profile_pics=profile_pics)
+                           profile_pics_path=profile_pics_path)
 
 @users.route("/account/edit", methods=['GET', 'POST'])
 @login_required
 def edit_account():
+    global profile_pics_path
+    if not profile_pics_path:
+        profile_pics_path = url_for('static', filename=profile_pics)
     form = UpdateAccountForm()
     if form.validate_on_submit():
         if form.picture.data:
@@ -78,11 +84,14 @@ def edit_account():
         form.username.data = current_user.username
         form.email.data = current_user.email
     return render_template('edit_account.html', title='Account',
-                           profile_pics=profile_pics, form=form)
+                           profile_pics_path=profile_pics_path, form=form)
 
 
 @users.route("/list_users", methods=['GET','POST'])
 def list_users():
+    global profile_pics_path
+    if not profile_pics_path:
+        profile_pics_path = url_for('static', filename=profile_pics)
     if not current_user.is_admin:
         flash(f'Admin account required!', 'danger')
         return redirect(url_for('main.home'))
@@ -100,4 +109,4 @@ def list_users():
                 flash(str(count)+' users have been deleted!', 'success')
         return redirect(url_for('users.list_users'))
 
-    return render_template('list_users.html', users=users, profile_pics=profile_pics)
+    return render_template('list_users.html', users=users, profile_pics_path=profile_pics_path)

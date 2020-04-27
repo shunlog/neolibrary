@@ -1,7 +1,7 @@
 from flask import render_template, url_for, flash, redirect, request, Blueprint
 from flask import current_app as app
 from flask_login import current_user, login_required
-from neolibrary import graph, book_covers
+from neolibrary import graph, book_covers, book_covers_path
 from neolibrary.models import Author
 from neolibrary.authors.forms import AuthorForm
 
@@ -9,6 +9,9 @@ authors = Blueprint('authors', __name__)
 
 @authors.route("/author/<int:author_id>")
 def author(author_id):
+    global book_covers_path
+    if not book_covers_path:
+        book_covers_path = url_for('static', filename=book_covers)
     author = Author().match(graph).where("id(_)=%d"%author_id).first()
     if author:
         return render_template('author.html', title="Details",author=author, author_id=author_id, book_covers=book_covers)

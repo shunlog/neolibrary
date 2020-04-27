@@ -2,30 +2,30 @@
 {% block content %}
 <div class="content-section">
   <form method="POST" action="" enctype="multipart/form-data">
-      {% for user in users %}
-      <div class="row">
-          {% if user.image_file %}
-          <img class="rounded-circle account-img"
-               src="{{ url_for('static', filename= profile_pics+ user.image_file) }}">
-          {% else %}
-          <img class="rounded-circle account-img"
-               src="{{ url_for('static', filename= profile_pics+ 'default.png') }}">
-          {% endif %}
-          <div class="form-check custom-control custom-checkbox">
-              <input class="form-check-input custom-control-input"
-                     name="user"
-                     id="{{user.get_node_id()}}"
-                     type="checkbox"
-                     value="{{user.get_id()}}">
-              <label class="form-check-label custom-control-label"
-                     for="{{user.get_node_id()}}">
-                  {{ user.username }}
-              </label>
-          </div>
-          
+    {% for user in users %}
+    <div class="row">
+      {% if user.image_file %}
+      <img class="rounded-circle account-img"
+           src="{{ profile_pics_path + user.image_file }}">
+      {% else %}
+      <img class="rounded-circle account-img"
+           src="{{ profile_pics_path + 'default.png'}}">
+      {% endif %}
+      <div class="form-check custom-control custom-checkbox">
+        <input class="form-check-input custom-control-input"
+               name="user"
+               id="{{user.get_node_id()}}"
+               type="checkbox"
+               value="{{user.get_id()}}">
+        <label class="form-check-label custom-control-label"
+               for="{{user.get_node_id()}}">
+          {{ user.username }}
+        </label>
       </div>
-      {% endfor %}
-      <input type="submit" value="Delete selected users">
+
+    </div>
+    {% endfor %}
+    <input type="submit" value="Delete selected users">
   </form>
 </div>
 {% endblock content %}

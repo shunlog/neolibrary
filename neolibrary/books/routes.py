@@ -4,7 +4,7 @@ from json import dumps
 from flask import render_template, url_for, flash, redirect, request, Blueprint
 from flask import current_app as app
 from flask_login import current_user, login_required
-from neolibrary import graph, book_covers
+from neolibrary import graph, book_covers, book_covers_path
 from neolibrary.books.forms import BookForm
 from neolibrary.models import Book, Author, Tag
 from neolibrary.books.utils import match_book, save_book_cover, download_book_cover, delete_book_cover
@@ -76,10 +76,14 @@ def new_book():
 
 @books.route("/book/<int:book_id>")
 def book(book_id):
+    global book_covers_path
+    if not book_covers_path:
+        book_covers_path = url_for('static', filename=book_covers)
     book = Book().match(graph).where("id(_)=%d"%book_id).first()
     if not book:
         return render_template('no_such_item.html', item="Book")
-    return render_template('book.html', title="Details",book=book, book_id=book_id, book_covers=book_covers)
+    return render_template('book.html', title="Details",book=book, book_id=book_id,
+                           book_covers_path=book_covers_path)
 
 
 @books.route("/book/<int:book_id>/update", methods=['GET', 'POST'])
