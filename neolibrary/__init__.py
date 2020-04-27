@@ -18,6 +18,10 @@ bcrypt = Bcrypt()
 
 book_covers = Config.BOOK_COVERS
 profile_pics = Config.PROFILE_PICS
+ftp_user = Config.FTP_USER
+ftp_password = Config.FTP_PASSWORD
+host_ip = Config.HOST_IP
+host_dir = Config.HOST_DIR
 
 login_manager = LoginManager()
 login_manager.login_view = 'users.login'

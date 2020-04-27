@@ -1,12 +1,14 @@
 import os
 import secrets
 import urllib.request
+from ftplib import FTP
+from pathlib import Path
 from itertools import groupby
 from flask import current_app as app
 from PIL import Image
 from neolibrary import graph, book_covers
-from neolibrary import book_covers
-from neolibrary.models import Book 
+from neolibrary import book_covers, ftp_user, ftp_password, host_ip, host_dir
+from neolibrary.models import Book
 
 
 def match_book(query, node):
@@ -18,7 +20,6 @@ def match_book(query, node):
     except:
         print("Error running query!")
 
-
 def iter_pages(pages, current_page, left_edge=1, right_edge=1, left_current=1, right_current=1):
     ls = [i for i in range(1,pages+1)]
     ls2 = [i for i in range(current_page-left_current-1, current_page+right_current)]
@@ -29,16 +30,20 @@ def iter_pages(pages, current_page, left_edge=1, right_edge=1, left_current=1, r
     return ls
 
 def save_book_cover(new_pic):
-    global book_covers
     random_hex = secrets.token_hex(8)
     _, f_ext = os.path.splitext(new_pic.filename)
     picture_fn = random_hex + f_ext
     picture_path = os.path.join(app.root_path, 'static/', book_covers, picture_fn)
 
     image = Image.open(new_pic)
-
     cropped = crop_picture(image)
     cropped.save(picture_path)
+
+    ftp = FTP(host_ip, ftp_user, ftp_password)
+    ftp.cwd(host_dir+book_covers)
+    with open(picture_path, 'rb') as file:
+        ftp.storbinary(f'STOR {picture_fn}', file)
+
     return picture_fn
 
 def download_book_cover(url):
@@ -62,12 +67,17 @@ def download_book_cover(url):
     return picture_fn
 
 
-def delete_book_cover(old_picture):
+def delete_book_cover(filename):
     global book_covers
     try:
-        picture_path = os.path.join(app.root_path, 'static/', book_covers, old_picture)
-        os.remove(picture_path)
-        return True
+        if ftp_user and ftp_password and host_ip and host_dir:
+            ftp = FTP(host_ip, ftp_user, ftp_password)
+            ftp.cwd(host_dir+book_covers)
+            ftp.delete(filename)
+        else:
+            picture_path = os.path.join(app.root_path, 'static/', book_covers, filename)
+            os.remove(picture_path)
+            return True
     except:
         return False
 
