@@ -21,7 +21,18 @@ def match_book(query, node):
     except:
         print("Error running query!")
 
+def validate_page_number(page, pages):
+    if page > pages:
+        page = pages
+    elif page < 1:
+        page = 1
+    return page
+
+
 def iter_pages(pages, current_page, left_edge=1, right_edge=1, left_current=1, right_current=1):
+    # create list: 1- ... - left_edge - None - left_current - ... - current_page
+    # - ... - right_current - None - right_edge - ... - pages
+    page = validate_page_number(current_page, pages)
     ls = [i for i in range(1,pages+1)]
     ls2 = [i for i in range(current_page-left_current-1, current_page+right_current)]
     for i in range(left_edge,pages-right_edge):

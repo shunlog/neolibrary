@@ -5,7 +5,7 @@ from neolibrary import graph, book_covers, book_covers_path
 from neolibrary.models import Book, Author, User, Tag
 from neolibrary.search.forms import SearchForm
 from neolibrary.search.utils import str_to_regexp
-from neolibrary.books.utils import iter_pages
+from neolibrary.books.utils import iter_pages, validate_page_number
 
 search_bl = Blueprint('search', __name__)
 n_limit = Book.n_limit
@@ -22,36 +22,29 @@ def search():
     search.search.data = search_str
     search.select.data = select_str
 
+    page = request.args.get('page',1, type=int)
+
+
     if search.data['select'] == "All":
-        page = request.args.get('page',1, type=int)
         # match romanian chars
 
         if search_str and search_str != '':
 
             search_regexp = str_to_regexp(search_str)
 
-            query = "match (b:Book)\
-                where b.title=~$search_regexp \
-                return b union\
-                match (b)<--(t:Tag)\
-                where t.name=~$search_regexp \
-                return b union\
-                match (b)<--(a:Author)\
-                where a.name=~$search_regexp \
-                return distinct b"
+            query = "match (b:Book) where b.title=~$search_regexp return b union\
+                match (b)<--(t:Tag) where t.name=~$search_regexp return b union\
+                match (b)<--(a:Author) where a.name=~$search_regexp return distinct b"
 
             dt = graph.run(query,search_regexp=search_regexp)
             books = [Book.wrap(node[0]) for node in dt]
 
             count = len(books)
             pages = count // n_limit if count % n_limit == 0 else count // n_limit + 1
-            if page > pages:
-                page = pages
-            elif page < 1:
-                page = 1
-            page_ls = iter_pages(pages, page, 2, 1, 1, 3)
-
+            page = validate_page_number(page, pages)
             n_skip = abs(n_limit * (page - 1))
+            page_ls = iter_pages(pages, page, 1, 1, 2, 2)
+
             books = books[n_skip:n_skip+n_limit]
 
             if books:
@@ -59,7 +52,7 @@ def search():
                                 title="Search", page_ls=page_ls, select = select_str,
                                 search=search_str, current_page=page)
             else:
-                flash("Couldn't find any books","danger")
+                flash("Couldn't find any books matching that query","danger")
 
     query = "match(b:Book) optional match (b)--(u:User) return b, count(u)\
             order by count(u) desc, b.title limit $limit"
