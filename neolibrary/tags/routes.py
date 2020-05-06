@@ -1,7 +1,7 @@
 from flask import render_template, url_for, flash, redirect, request, Blueprint
 from flask import current_app as app
 from flask_login import current_user, login_required
-from neolibrary import graph, book_covers
+from neolibrary import graph, book_covers, book_covers_path
 from neolibrary.models import Tag
 from neolibrary.tags.forms import TagForm
 
@@ -9,9 +9,13 @@ tags = Blueprint('tags', __name__)
 
 @tags.route("/tag/<int:tag_id>")
 def tag(tag_id):
+    global book_covers_path
+    if not book_covers_path:
+        book_covers_path = url_for('static', filename=book_covers)
     tag = Tag().match(graph).where("id(_)=%d"%tag_id).first()
     if tag:
-        return render_template('tag.html', title="Details",tag=tag, tag_id=tag_id, book_covers=book_covers)
+        return render_template('tag.html', title="Details",tag=tag,
+                               tag_id=tag_id, book_covers_path=book_covers_path)
     return render_template('no_such_item.html', item="Tag")
 
 

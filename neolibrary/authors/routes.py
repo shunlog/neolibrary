@@ -14,7 +14,8 @@ def author(author_id):
         book_covers_path = url_for('static', filename=book_covers)
     author = Author().match(graph).where("id(_)=%d"%author_id).first()
     if author:
-        return render_template('author.html', title="Details",author=author, author_id=author_id, book_covers=book_covers)
+        return render_template('author.html', title="Details",author=author,
+                               author_id=author_id, book_covers_path=book_covers_path)
     return render_template('no_such_item.html', item="Author")
 
 
