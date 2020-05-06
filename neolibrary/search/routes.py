@@ -26,16 +26,11 @@ def search():
 
 
     if search.data['select'] == "All":
-        # match romanian chars
-
         if search_str and search_str != '':
-
             search_regexp = str_to_regexp(search_str)
-
             query = "match (b:Book) where b.title=~$search_regexp return b union\
                 match (b)<--(t:Tag) where t.name=~$search_regexp return b union\
                 match (b)<--(a:Author) where a.name=~$search_regexp return distinct b"
-
             dt = graph.run(query,search_regexp=search_regexp)
             books = [Book.wrap(node[0]) for node in dt]
 
@@ -46,13 +41,34 @@ def search():
             page_ls = iter_pages(pages, page, 1, 1, 2, 2)
 
             books = books[n_skip:n_skip+n_limit]
-
             if books:
                 return render_template('search.html', books=books, form=search, book_covers_path=book_covers_path,
                                 title="Search", page_ls=page_ls, select = select_str,
                                 search=search_str, current_page=page)
             else:
                 flash("Couldn't find any books matching that query","danger")
+
+    elif search.data['select'] == "Author":
+        if search_str and search_str != '':
+            search_regexp = str_to_regexp(search_str)
+            query = "match (b:Book)<--(a:Author) where a.name=~$search_regexp \
+            return a, count(b) order by count(b) desc"
+            dt = graph.run(query, search_regexp=search_regexp)
+            authors = [Author.wrap(node[0]) for node in dt]
+            print(authors)
+            return render_template('search.html', form=search, title="Search", search=search_str,
+                                authors=authors)
+
+    elif search.data['select'] == "Tag":
+        if search_str and search_str != '':
+            search_regexp = str_to_regexp(search_str)
+            query = "match (b:Book)<--(t:Tag) where t.name=~$search_regexp \
+            return t, count(b) order by count(b) desc"
+            dt = graph.run(query, search_regexp=search_regexp)
+            tags = [Tag.wrap(node[0]) for node in dt]
+            print(tags)
+            return render_template('search.html', form=search, title="Search", search=search_str,
+                                   tags=tags)
 
     query = "match(b:Book) optional match (b)--(u:User) return b, count(u)\
             order by count(u) desc, b.title limit $limit"
