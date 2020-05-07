@@ -91,7 +91,8 @@ def delete_book_cover(filename):
             picture_path = os.path.join(app.root_path, 'static/', book_covers, filename)
             os.remove(picture_path)
             return True
-    except:
+    except Exception as e:
+        print(e)
         return False
 
 def crop_picture(image):
