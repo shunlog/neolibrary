@@ -25,6 +25,8 @@ def register():
         user.password = hashed_password
         if User.count == 0:
             user.is_admin = True
+        else:
+            user.is_admin = False
         graph.push(user)
         flash(f'Account created successfully. You can now log in as {form.username.data}!', 'success')
         return redirect(url_for('users.login'))

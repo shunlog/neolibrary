@@ -14,13 +14,15 @@ def testing():
                     -(b)<-[:LIKED]-(u:User{username:'admin'})\
                     where not (a)-->()<-[:LIKED]-(u)\
                     return a")
+    print(dt)
     ls = [Author.wrap(node[0]) for node in dt]
     print(ls)
 
     print("_____________________DATA2______________________________")
-    dt2 = graph.run("match(b:Book) optional match (b)--(u:User)\
+    dt = graph.run("match(b:Book) optional match (b)--(u:User)\
             return b, count(u) order by count(u) desc, b.title limit 6")
-    ls = [Book.wrap(b) for b,c in dt2]
+    print(dt)
+    ls = [Book.wrap(b) for b,c in dt]
     print(ls)
 
     print("_____________________DATA3______________________________")
@@ -30,6 +32,7 @@ def testing():
                 order by count(c) desc\
                 limit $limit"
     dt = graph.run(query, username='admin', limit=4)
+    print(dt)
     ls = [Book.wrap(node) for node,c in dt]
     print(ls)
 

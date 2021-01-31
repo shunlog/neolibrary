@@ -14,7 +14,7 @@ def load_user(username):
 class Book(GraphObject):
     __primarykey__ = "title"
 
-    n_limit = 12
+    n_limit = 8
     count = graph.run("match(n:Book) return count(n)").evaluate()
     pages = count // n_limit if count % n_limit == 0 else count // n_limit + 1
 

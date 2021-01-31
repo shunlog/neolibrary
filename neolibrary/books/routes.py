@@ -20,7 +20,6 @@ def new_book():
 
     form = BookForm()
     if form.validate_on_submit():
-
         picture_file = None
         if form.picture.data:
             picture_file = save_book_cover(form.picture.data)
@@ -31,6 +30,7 @@ def new_book():
                 return render_template('create_book.html', title='New Book',
                                        form=form, legend='New Book', book_covers=book_covers)
 
+        # if the title is same
         book = match_book("create (b:Book) return b", 'b')
         if not book:
             flash('The book couldn\'t be created!', 'danger')
@@ -38,9 +38,6 @@ def new_book():
         print(book)
         if picture_file:
             book.image_file = picture_file
-
-        # creating book by query or else py2neo will match existing one
-        # if the title is same
         book.title=form.title.data.strip()
 
         authors_ls=form.hidden_authors.data
@@ -54,6 +51,7 @@ def new_book():
                 book.authors.add(author)
             elif a_name != '':
                 book.authors.add(author)
+
         tags_ls=form.hidden_tags.data
         for t_name in tags_ls.split(','):
             t_name = t_name.strip()
