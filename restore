@@ -1,5 +1,9 @@
 #!/bin/bash
-~/.config/Neo4j\ Desktop/Application/neo4jDatabases/database-f07e4b6e-ddee-4f4b-bc96-8b7a02710c78/installation-4.0.1/bin/neo4j-admin restore --from=/home/awh/backups/library_db/neo4j --database=neo4j --force
-rsync -r -zvh --delete ~/backups/library_flask/profile_pics  neolibrary/static/
-rsync -r -zvh --delete ~/backups/library_flask/book_covers  neolibrary/static/
+SRC="$HOME/backups/neolibrary/neo4j/neolibrary.backup"
+DEST="neolibrary/static"
+ONGDB_BIN="$HOME/Programs/ongdb-enterprise/bin"
+NAME="neolibrary"
 
+rsync -rv --delete $SRC $DEST
+
+"$ONGDB_BIN"/neo4j-admin restore --from="$SRC" --database="$NAME"
