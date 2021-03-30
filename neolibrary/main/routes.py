@@ -7,7 +7,7 @@ from neolibrary.models import Book
 from neolibrary.books.utils import match_book, iter_pages
 
 main = Blueprint('main', __name__)
-n_limit = Book.n_limit
+n_limit = Book.n_limit_home
 
 
 @main.route("/")

@@ -40,15 +40,17 @@
 
             <div class="col-sm-12">
               <a href="{{ url_for('books.book', book_id=book.get_id()) }}" class="card-title">
-                {% if book.image_file %}
-                <img src="{{ book_covers_path + book.image_file }}"
-                     class="img-fluid mx-auto d-block card-img-top"
-                     alt="Image is not available">
-                {% else %}
-                <img src="{{ book_covers_path + 'default.png' }}"
-                     class="img-fluid card-img-top"
-                     alt="Image is not available">
-                {% endif %}
+            {% if book.image_url %}
+            <img src="{{ book.image_url }}"
+                 class="img-fluid mx-auto d-block card-img-top">
+            {% elif book.image_file %}
+            <img src="{{ book_covers_path + book.image_file }}"
+                 class="img-fluid mx-auto d-block card-img-top">
+            {% else %}
+            <img src="{{ book_covers_path + 'default.png' }}"
+                 class="img-fluid card-img-top"
+                 alt="Image is not available">
+            {% endif %}
               </a>
             </div>
 
@@ -92,15 +94,17 @@
 
             <div class="col-sm-12">
               <a href="{{ url_for('books.book', book_id=book.get_id()) }}" class="card-title">
-                {% if book.image_file %}
-                <img src="{{ book_covers_path + book.image_file }}"
-                     class="img-fluid mx-auto d-block card-img-top"
-                     alt="Image is not available">
-                {% else %}
-                <img src="{{ book_covers_path + 'default.png' }}"
-                     class="img-fluid card-img-top"
-                     alt="Image is not available">
-                {% endif %}
+            {% if book.image_url %}
+            <img src="{{ book.image_url }}"
+                 class="img-fluid mx-auto d-block card-img-top">
+            {% elif book.image_file %}
+            <img src="{{ book_covers_path + book.image_file }}"
+                 class="img-fluid mx-auto d-block card-img-top">
+            {% else %}
+            <img src="{{ book_covers_path + 'default.png' }}"
+                 class="img-fluid card-img-top"
+                 alt="Image is not available">
+            {% endif %}
               </a>
             </div>
 

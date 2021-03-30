@@ -14,7 +14,8 @@ def load_user(username):
 class Book(GraphObject):
     __primarykey__ = "title"
 
-    n_limit = 8
+    n_limit = 24
+    n_limit_home = 12
     count = graph.run("match(n:Book) return count(n)").evaluate()
     pages = count // n_limit if count % n_limit == 0 else count // n_limit + 1
 
@@ -24,9 +25,11 @@ class Book(GraphObject):
 
     title = Property()
     image_file = Property()
+    image_url = Property()
+    small_image_url = Property()
 
     authors = RelatedFrom("Author", "WROTE")
-    tags = RelatedFrom("Tag", "TAGGED")
+    tags = RelatedFrom("Tag", "TAGS")
     users_read = RelatedFrom("User", "READ")
     users_liked = RelatedFrom("User", "LIKED")
     users_disliked = RelatedFrom("User", "DISLIKED")
