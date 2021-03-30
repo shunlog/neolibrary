@@ -1,9 +1,0 @@
-#!/bin/bash
-SRC="$HOME/backups/neolibrary/neo4j/neolibrary.backup"
-DEST="neolibrary/static"
-ONGDB_BIN="$HOME/Programs/ongdb-enterprise/bin"
-NAME="neolibrary"
-
-rsync -rv --delete $SRC $DEST
-
-"$ONGDB_BIN"/neo4j-admin restore --from="$SRC" --database="$NAME"
