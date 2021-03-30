@@ -27,7 +27,7 @@ def home():
         dt = graph.run(query, username=current_user.username, limit=n_limit)
         books_recommended["users"] = [Book.wrap(node) for node,c in dt]
 
-        query = "match (b:Book)<-[:TAGGED]-()-[:TAGGED]->(c:Book)<-[:LIKED]-(u:User)\
+        query = "match (b:Book)<-[:TAGS]-()-[:TAGS]->(c:Book)<-[:LIKED]-(u:User)\
                     where u.username=$username and not (u)-->(b)\
                     return b, count(c)\
                     order by count(c) desc\

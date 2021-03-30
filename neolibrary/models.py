@@ -55,10 +55,10 @@ class Tag(GraphObject):
     __primarykey__ = "name"
 
     name = Property()
-    books = RelatedTo("Book", "TAGGED")
+    books = RelatedTo("Book", "TAGS")
 
     def book_count(self):
-        count = graph.run("match (b:Book)<-[:TAGGED]-(t:Tag) where t.name='"+
+        count = graph.run("match (b:Book)<-[:TAGS]-(t:Tag) where t.name='"+
                           self.name+"' return count(b)").evaluate()
         return count
 

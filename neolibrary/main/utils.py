@@ -13,7 +13,7 @@ def init_sidebar(user):
                 limit=limit, username=user.username)
         authors = [Author.wrap(node[0]) for node in dt_authors]
 
-        dt_tags = graph.run("match (t)-[:TAGGED]->(b2)<-[:LIKED]-(u2)-[:LIKED]\
+        dt_tags = graph.run("match (t)-[:TAGS]->(b2)<-[:LIKED]-(u2)-[:LIKED]\
                 -(b)<-[:LIKED]-(u:User{username: $username})\
                 where not (t)-->()<-[:LIKED]-(u)\
                 return distinct t limit $limit",
