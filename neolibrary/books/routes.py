@@ -38,7 +38,7 @@ def new_book():
         print(book)
         if picture_file:
             book.image_file = picture_file
-        book.title=form.title.data.strip()
+        book.name=form.title.data.strip()
 
         authors_ls=form.hidden_authors.data
         for a_name in authors_ls.split(','):
@@ -102,7 +102,7 @@ def update_book(book_id):
             book.image_file = picture_file
 
         # title
-        book.title=form.title.data
+        book.name=form.title.data
 
         # delete previous authors
         authors_to_remove = []
@@ -149,7 +149,7 @@ def update_book(book_id):
         return redirect(url_for('books.book', book_id=book_id))
 
     elif book and request.method == 'GET':
-        form.title.data = book.title
+        form.title.data = book.name
 
         prefilled={}
         authors_ls = []

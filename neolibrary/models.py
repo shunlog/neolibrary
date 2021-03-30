@@ -12,7 +12,7 @@ def load_user(username):
 
 
 class Book(GraphObject):
-    __primarykey__ = "title"
+    __primarykey__ = "name"
 
     n_limit = 24
     n_limit_home = 12
@@ -23,6 +23,7 @@ class Book(GraphObject):
         s = str(self.__node__)
         return s[s.find("_")+1:s.find(":")]
 
+    name = Property()
     title = Property()
     image_file = Property()
     image_url = Property()
