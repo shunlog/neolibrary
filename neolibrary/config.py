@@ -11,10 +11,6 @@ class Config:
     PROFILE_PICS = os.getenv('PROFILE_PICS')
     BOOK_COVERS = os.getenv('BOOK_COVERS')
 
-    # graphene database (is set automatically on heroku)
-    GRAPHENEDB_URL = os.getenv("GRAPHENEDB_BOLT_URL")
-    GRAPHENEDB_USER = os.getenv("GRAPHENEDB_BOLT_USER")
-    GRAPHENEDB_PASSWORD = os.getenv('GRAPHENEDB_BOLT_PASSWORD')
     # ftp to server that hosts pics
     FTP_USER = os.getenv("FTP_USER")
     FTP_PASSWORD = os.getenv("FTP_PASSWORD")

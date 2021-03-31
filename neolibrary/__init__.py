@@ -5,14 +5,7 @@ from flask_login import LoginManager
 from neolibrary.config import Config
 
 
-graphenedb_url = Config.GRAPHENEDB_URL
-graphenedb_user = Config.GRAPHENEDB_USER
-graphenedb_pass = Config.GRAPHENEDB_PASSWORD
-if graphenedb_url:
-    graph = Graph(graphenedb_url, user=graphenedb_user, password=graphenedb_pass, bolt = True, secure = True, http_port = 24789, https_port = 24780)
-else:
-    graph = Graph(password=Config.DB_PASSWORD)
-
+graph = Graph(password=Config.DB_PASSWORD)
 bcrypt = Bcrypt()
 
 book_covers = Config.BOOK_COVERS
