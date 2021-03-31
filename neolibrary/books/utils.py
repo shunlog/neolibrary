@@ -23,10 +23,10 @@ def match_book(query, node):
         print("Error running query!")
 
 def validate_page_number(page, pages):
-    if page > pages:
-        page = pages
-    elif page < 1:
-        page = 1
+    if page <= 1:
+        return 1
+    elif page > pages:
+        return pages
     return page
 
 
