@@ -9,6 +9,7 @@ from flask import current_app as app
 from PIL import Image
 from neolibrary import graph, book_covers
 from neolibrary import book_covers, ftp_user, ftp_password, host_ip, host_dir
+from neolibrary import Config
 from neolibrary.models import Book
 
 
@@ -29,7 +30,9 @@ def validate_page_number(page, pages):
     return page
 
 
-def iter_pages(pages, current_page, left_edge=1, right_edge=1, left_current=1, right_current=1):
+def iter_pages(pages, current_page, left_edge=Config.LE,
+               right_edge=Config.RE, left_current=Config.LC,
+               right_current=Config.RC):
     # create list: 1- ... - left_edge - None - left_current - ... - current_page
     # - ... - right_current - None - right_edge - ... - pages
     page = validate_page_number(current_page, pages)

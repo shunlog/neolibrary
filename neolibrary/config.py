@@ -18,3 +18,10 @@ class Config:
     # link to the site
     BOOK_COVERS_PATH = os.getenv('BOOK_COVERS_PATH')
     PROFILE_PICS_PATH = os.getenv('PROFILE_PICS_PATH')
+
+    # pagination
+    AUTHORS_LIMIT = 20
+    LE = 2  # left edge
+    RE = 2  # right edge
+    LC = 2  # left from current
+    RC = 2  # right from current
