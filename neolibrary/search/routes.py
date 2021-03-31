@@ -1,8 +1,10 @@
+from math import ceil
 from flask import render_template, url_for, flash, redirect, request, abort, Blueprint, jsonify
 from flask_login import current_user, login_required
 from werkzeug.datastructures import MultiDict
 from neolibrary import graph, book_covers, book_covers_path
 from neolibrary.models import Book, Author, User, Tag
+from neolibrary.config import Config
 from neolibrary.search.forms import SearchForm
 from neolibrary.search.utils import str_to_regexp
 from neolibrary.books.utils import iter_pages, validate_page_number
@@ -21,7 +23,6 @@ def search():
     search = SearchForm()
     search.search.data = search_str
     search.select.data = select_str
-
     page = request.args.get('page',1, type=int)
 
 
@@ -38,7 +39,7 @@ def search():
             pages = count // n_limit if count % n_limit == 0 else count // n_limit + 1
             page = validate_page_number(page, pages)
             n_skip = abs(n_limit * (page - 1))
-            page_ls = iter_pages(pages, page, 1, 1, 2, 2)
+            page_ls = iter_pages(pages, page)
 
             books = books[n_skip:n_skip+n_limit]
             if books:
@@ -51,13 +52,26 @@ def search():
     elif search.data['select'] == "Author":
         if search_str and search_str != '':
             search_regexp = str_to_regexp(search_str)
-            query = "match (b:Book)<--(a:Author) where a.name=~$search_regexp \
-            return a, count(b) order by count(b) desc"
-            dt = graph.run(query, search_regexp=search_regexp)
+            lim = Config.AUTHORS_LIMIT
+
+            query = "match (:Book)<--(a:Author) where a.name=~$search \
+            with distinct a return count(a)"
+            dt = graph.run(query, search=search_regexp)
+
+            count = dt.evaluate()
+            pages = ceil(count/lim)
+            page = validate_page_number(page, pages)
+            n_skip = abs(n_limit * (page - 1))
+            page_ls = iter_pages(pages, page)
+
+            query_authors = "match (b:Book)<--(a:Author) where a.name=~$search \
+            return a, count(b) order by count(b) desc skip $skip limit $limit"
+            dt = graph.run(query_authors, search=search_regexp,
+                           limit=lim, skip=(page-1)*lim)
             authors = [Author.wrap(node[0]) for node in dt]
-            print(authors)
             return render_template('search.html', form=search, title="Search", search=search_str,
-                                authors=authors)
+                                   authors=authors, page_ls=page_ls, current_page=page,
+                                   select=select_str)
 
     elif search.data['select'] == "Tag":
         if search_str and search_str != '':
@@ -66,7 +80,6 @@ def search():
             return t, count(b) order by count(b) desc"
             dt = graph.run(query, search_regexp=search_regexp)
             tags = [Tag.wrap(node[0]) for node in dt]
-            print(tags)
             return render_template('search.html', form=search, title="Search", search=search_str,
                                    tags=tags)
 
