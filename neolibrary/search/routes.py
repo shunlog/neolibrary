@@ -76,12 +76,25 @@ def search():
     elif search.data['select'] == "Tag":
         if search_str and search_str != '':
             search_regexp = str_to_regexp(search_str)
+            lim = Config.AUTHORS_LIMIT
+
+            query = "match (:Book)<--(a:Tag) where a.name=~$search \
+            with distinct a return count(a)"
+            dt = graph.run(query, search=search_regexp)
+            count = dt.evaluate()
+            pages = ceil(count/lim)
+            page = validate_page_number(page, pages)
+            n_skip = abs(n_limit * (page - 1))
+            page_ls = iter_pages(pages, page)
+
             query = "match (b:Book)<--(t:Tag) where t.name=~$search_regexp \
-            return t, count(b) order by count(b) desc"
-            dt = graph.run(query, search_regexp=search_regexp)
+            return t, count(b) order by count(b) desc skip $skip limit $limit"
+            dt = graph.run(query, search_regexp=search_regexp,
+                           limit=lim, skip=(page-1)*lim)
             tags = [Tag.wrap(node[0]) for node in dt]
             return render_template('search.html', form=search, title="Search", search=search_str,
-                                   tags=tags)
+                                   tags=tags, page_ls=page_ls, current_page=page,
+                                   select=select_str)
 
     query = "match(b:Book) optional match (b)--(u:User) return b, count(u)\
             order by count(u) desc, b.title limit $limit"
