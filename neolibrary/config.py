@@ -22,6 +22,7 @@ class Config:
     # pagination
     AUTHORS_LIMIT = 20
     BOOKS_LIMIT = 12
+    BOOKS_LIMIT_HOME = 6
     LE = 2  # left edge
     RE = 2  # right edge
     LC = 2  # left from current

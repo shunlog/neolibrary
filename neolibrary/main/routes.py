@@ -1,13 +1,12 @@
 from flask import render_template, Blueprint, request, url_for
 from flask_login import current_user
 from neolibrary.models import Book
-from neolibrary import graph, book_covers, book_covers_path
+from neolibrary import graph, book_covers, book_covers_path, Config
 from neolibrary.main.utils import init_sidebar
 from neolibrary.models import Book
 from neolibrary.books.utils import match_book, iter_pages
 
 main = Blueprint('main', __name__)
-n_limit = Book.n_limit_home
 
 
 @main.route("/")
@@ -24,7 +23,7 @@ def home():
                     return b, count(c)\
                     order by count(c) desc\
                     limit $limit"
-        dt = graph.run(query, username=current_user.username, limit=n_limit)
+        dt = graph.run(query, username=current_user.username, limit=Config.BOOKS_LIMIT_HOME)
         books_recommended["users"] = [Book.wrap(node) for node,c in dt]
 
         query = "match (b:Book)<-[:TAGS]-()-[:TAGS]->(c:Book)<-[:LIKED]-(u:User)\
@@ -32,7 +31,7 @@ def home():
                     return b, count(c)\
                     order by count(c) desc\
                     limit $limit"
-        dt = graph.run(query, username=current_user.username, limit=n_limit)
+        dt = graph.run(query, username=current_user.username, limit=Config.BOOKS_LIMIT_HOME)
         books_recommended["tags"] = [Book.wrap(node) for node,c in dt]
 
         query = "match (b:Book)<-[:WROTE]-()-[:WROTE]->(c:Book)<-[:LIKED]-(u:User)\
@@ -40,8 +39,13 @@ def home():
                     return b, count(c)\
                     order by count(c) desc\
                     limit $limit"
-        dt = graph.run(query, username=current_user.username, limit=n_limit)
+        dt = graph.run(query, username=current_user.username, limit=Config.BOOKS_LIMIT_HOME)
         books_recommended["authors"] = [Book.wrap(node) for node,c in dt]
+        for ls in books_recommended.values():
+            for book in ls:
+                if len(book.name) > Config.TITLE_LEN:
+                    book.name = book.name[:Config.TITLE_LEN]+".."
+
 
         return render_template('home.html', title='Home',sidebar=sidebar,
                                 books_recommended=books_recommended, book_covers_path=book_covers_path)
@@ -49,7 +53,7 @@ def home():
         sidebar = init_sidebar(None)
         query = "match(b:Book) optional match (b)--(u:User) return b, count(u)\
                 order by count(u) desc, b.title limit $limit"
-        dt = graph.run(query,limit=n_limit)
+        dt = graph.run(query,limit=Config.BOOKS_LIMIT_HOME)
         books = [Book.wrap(node) for node,c in dt]
 
         return render_template('home.html', title='Home',sidebar=sidebar,

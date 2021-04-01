@@ -14,10 +14,7 @@ def load_user(username):
 class Book(GraphObject):
     __primarykey__ = "name"
 
-    n_limit = 24
-    n_limit_home = 12
     count = graph.run("match(n:Book) return count(n)").evaluate()
-    pages = count // n_limit if count % n_limit == 0 else count // n_limit + 1
 
     def get_id(self):
         s = str(self.__node__)
