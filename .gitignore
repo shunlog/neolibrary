@@ -3,6 +3,7 @@ venv
 neolibrary/static/*/*
 !*/static/*/default.png
 !*/static/*/default.jpg
+!*/static/styles/*
 !*/static/tags_manager/tagmanager.js
 !*/static/tags_manager/tagmanager.css
 test.py
