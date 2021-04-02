@@ -30,60 +30,8 @@
   </div>
 
   <div class="col-md-9 ">
-    {% if books %}
-    <h3>Most popular:</h3>
-    <div class="row">
-      {% for book in books %}
-      <div class="col-xl-3 col-md-4 col-sm-4">
-        <div class="card d-100 d-flex" >
-          <div class="row no-gutters">
-            <div class="col-sm-12 card-title">
-              <a href="{{ url_for('books.book', book_id=book.get_id()) }}">
-                {% if book.image_url %}
-                <img src="{{ book.image_url }}"
-                     class="img-fluid mx-auto d-block card-img-top">
-                {% elif book.image_file %}
-                <img src="{{ book_covers_path + book.image_file }}"
-                     class="img-fluid mx-auto d-block card-img-top">
-                {% else %}
-                <img src="{{ book_covers_path + 'default.png' }}"
-                     class="img-fluid card-img-top"
-                     alt="Image is not available">
-                {% endif %}
-              </a>
-            </div>
-
-            <div class="card-body">
-              <div class="line-clamp-title">
-                <h5 ><a href="{{ url_for('books.book', book_id=book.get_id()) }}">
-                    {{ book.name }}
-                </a></h5>
-              </div>
-              <div class="line-clamp-authors">
-                <p>
-                  By
-                  {% for author in book.authors %}
-                  <a href="{{ url_for('authors.author', author_id=author.get_id()) }}">
-                    {{ author.name }}
-                  </a>
-                  {% endfor %}
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      {% endfor%}
-    </div>
-    {% else %}
     {% for key in books_recommended %}
-    {% if key == "users" %}
-    <h2>User recommended books:</h2>
-    {% elif key == "tags" %}
-    <h2>Related tags:</h2>
-    {% elif key == "authors" %}
-    <h2>Related authors:</h2>
-    {% endif %}
+    <h2>{{ key }}</h2>
 
     {% if not books_recommended[key] %}
     <p>Nothing here yet</p>
@@ -135,7 +83,6 @@
       {% endfor %}
     </div>
     {% endfor %}
-    {% endif %}
   </div>
 
   {% endblock content %}
