@@ -37,36 +37,39 @@
       <div class="col-xl-3 col-md-4 col-sm-4">
         <div class="card d-100 d-flex" >
           <div class="row no-gutters">
-
-            <div class="col-sm-12">
-              <a href="{{ url_for('books.book', book_id=book.get_id()) }}" class="card-title">
-            {% if book.image_url %}
-            <img src="{{ book.image_url }}"
-                 class="img-fluid mx-auto d-block card-img-top">
-            {% elif book.image_file %}
-            <img src="{{ book_covers_path + book.image_file }}"
-                 class="img-fluid mx-auto d-block card-img-top">
-            {% else %}
-            <img src="{{ book_covers_path + 'default.png' }}"
-                 class="img-fluid card-img-top"
-                 alt="Image is not available">
-            {% endif %}
+            <div class="col-sm-12 card-title">
+              <a href="{{ url_for('books.book', book_id=book.get_id()) }}">
+                {% if book.image_url %}
+                <img src="{{ book.image_url }}"
+                     class="img-fluid mx-auto d-block card-img-top">
+                {% elif book.image_file %}
+                <img src="{{ book_covers_path + book.image_file }}"
+                     class="img-fluid mx-auto d-block card-img-top">
+                {% else %}
+                <img src="{{ book_covers_path + 'default.png' }}"
+                     class="img-fluid card-img-top"
+                     alt="Image is not available">
+                {% endif %}
               </a>
             </div>
 
-            <div class="col-md-12">
-              <div class="card-body">
-                <a href="{{ url_for('books.book', book_id=book.get_id()) }}" class="card-title">
-                  <h5 >{{ book.name }}</h5>
-                </a>
-                <p class="card-text">By
+            <div class="card-body">
+              <div class="line-clamp-title">
+                <h5 ><a href="{{ url_for('books.book', book_id=book.get_id()) }}">
+                    {{ book.name }}
+                </a></h5>
+              </div>
+              <div class="line-clamp-authors">
+                <p>
+                  By
                   {% for author in book.authors %}
-                  <a href="{{ url_for('authors.author', author_id=author.get_id()) }}">{{ author.name }}</a>
+                  <a href="{{ url_for('authors.author', author_id=author.get_id()) }}">
+                    {{ author.name }}
+                  </a>
                   {% endfor %}
                 </p>
               </div>
             </div>
-
           </div>
         </div>
       </div>
@@ -89,40 +92,45 @@
     <div class="row">
       {% for book in books_recommended[key] %}
       <div class="col-md-3 col-sm-4 col-6">
+
         <div class="card d-100 d-flex" >
           <div class="row no-gutters">
-
-            <div class="col-sm-12">
-              <a href="{{ url_for('books.book', book_id=book.get_id()) }}" class="card-title">
-            {% if book.image_url %}
-            <img src="{{ book.image_url }}"
-                 class="img-fluid mx-auto d-block card-img-top">
-            {% elif book.image_file %}
-            <img src="{{ book_covers_path + book.image_file }}"
-                 class="img-fluid mx-auto d-block card-img-top">
-            {% else %}
-            <img src="{{ book_covers_path + 'default.png' }}"
-                 class="img-fluid card-img-top"
-                 alt="Image is not available">
-            {% endif %}
+            <div class="col-sm-12 card-title">
+              <a href="{{ url_for('books.book', book_id=book.get_id()) }}">
+                {% if book.image_url %}
+                <img src="{{ book.image_url }}"
+                     class="img-fluid mx-auto d-block card-img-top">
+                {% elif book.image_file %}
+                <img src="{{ book_covers_path + book.image_file }}"
+                     class="img-fluid mx-auto d-block card-img-top">
+                {% else %}
+                <img src="{{ book_covers_path + 'default.png' }}"
+                     class="img-fluid card-img-top"
+                     alt="Image is not available">
+                {% endif %}
               </a>
             </div>
 
-            <div class="col-md-12">
-              <div class="card-body">
-                <a href="{{ url_for('books.book', book_id=book.get_id()) }}" class="card-title">
-                  <h5 >{{ book.name }}</h5>
-                </a>
-                <p class="card-text">By
+            <div class="card-body">
+              <div class="line-clamp-title">
+                <h5 ><a href="{{ url_for('books.book', book_id=book.get_id()) }}">
+                    {{ book.name }}
+                </a></h5>
+              </div>
+              <div class="line-clamp-authors">
+                <p>
+                  By
                   {% for author in book.authors %}
-                  <a href="{{ url_for('authors.author', author_id=author.get_id()) }}">{{ author.name }}</a>
+                  <a href="{{ url_for('authors.author', author_id=author.get_id()) }}">
+                    {{ author.name }}
+                  </a>
                   {% endfor %}
                 </p>
               </div>
             </div>
-
           </div>
         </div>
+
       </div>
       {% endfor %}
     </div>
