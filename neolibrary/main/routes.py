@@ -41,10 +41,6 @@ def home():
                     limit $limit"
         dt = graph.run(query, username=current_user.username, limit=Config.BOOKS_LIMIT_HOME)
         books_recommended["authors"] = [Book.wrap(node) for node,c in dt]
-        for ls in books_recommended.values():
-            for book in ls:
-                if len(book.name) > Config.TITLE_LEN:
-                    book.name = book.name[:Config.TITLE_LEN]+".."
 
 
         return render_template('home.html', title='Home',sidebar=sidebar,
