@@ -14,7 +14,11 @@
 
       <label>
         <a href="{{url_for('books.book', book_id=book.get_id()) }} ">
+          {% if book.name %}
           {{ book.name }}
+          {% else %}
+          {{ book.title }}
+          {% endif %}
         </a>
       </label>
 
