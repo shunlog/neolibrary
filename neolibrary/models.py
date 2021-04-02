@@ -16,10 +16,6 @@ class Book(GraphObject):
 
     count = graph.run("match(n:Book) return count(n)").evaluate()
 
-    def get_id(self):
-        s = str(self.__node__)
-        return s[s.find("_")+1:s.find(":")]
-
     name = Property()
     title = Property()
     image_file = Property()
@@ -32,6 +28,10 @@ class Book(GraphObject):
     users_liked = RelatedFrom("User", "LIKED")
     users_disliked = RelatedFrom("User", "DISLIKED")
 
+    def get_id(self):
+        s = str(self.__node__)
+        return s[s.find("_")+1:s.find(":")]
+
 
 class Author(GraphObject):
     __primarykey__ = "name"
@@ -40,13 +40,14 @@ class Author(GraphObject):
     books = RelatedTo("Book", "WROTE")
 
     def book_count(self):
-        count = graph.run("match (b:Book)<-[:WROTE]-(a:Author) where a.name='"+
-                          self.name+"' return count(b)").evaluate()
+        query = "match (b:Book)<-[:WROTE]-(a:Author) where a.name=$name return count(b)"
+        count = graph.run(query, name=self.name).evaluate()
         return count
 
     def get_id(self):
         s = str(self.__node__)
         return s[s.find("_")+1:s.find(":")]
+
 
 class Tag(GraphObject):
     __primarykey__ = "name"
@@ -55,13 +56,14 @@ class Tag(GraphObject):
     books = RelatedTo("Book", "TAGS")
 
     def book_count(self):
-        count = graph.run("match (b:Book)<-[:TAGS]-(t:Tag) where t.name='"+
-                          self.name+"' return count(b)").evaluate()
+        query = "match (b:Book)<-[:TAGS]-(t:Tag) where t.name=$name return count(b)"
+        count = graph.run(query, name=self.name).evaluate()
         return count
 
     def get_id(self):
         s = str(self.__node__)
         return s[s.find("_")+1:s.find(":")]
+
 
 class User(GraphObject, UserMixin):
     __primarykey__ = "username"
