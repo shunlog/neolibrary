@@ -1,0 +1,41 @@
+{% macro book_card(book) -%}
+<div class="col-md-3 col-sm-4 col-6">
+  <div class="card d-100 d-flex row no-gutters" >
+
+    <div class="col-sm-12 card-title">
+      <a href="{{ url_for('books.book', book_id=book.get_id()) }}">
+        {% if book.image_url %}
+        <img src="{{ book.image_url }}"
+             class="img-fluid mx-auto d-block card-img-top">
+        {% elif book.image_file %}
+        <img src="{{ book_covers_path + book.image_file }}"
+             class="img-fluid mx-auto d-block card-img-top">
+        {% else %}
+        <img src="{{ book_covers_path + 'default.png' }}"
+             class="img-fluid card-img-top"
+             alt="Image is not available">
+        {% endif %}
+      </a>
+    </div>
+
+    <div class="card-body">
+      <div class="line-clamp-title">
+        <h5 ><a href="{{ url_for('books.book', book_id=book.get_id()) }}">
+            {{ book.name }}
+        </a></h5>
+      </div>
+      <div class="line-clamp-authors">
+        <p>
+          By
+          {% for author in book.authors %}
+          <a href="{{ url_for('authors.author', author_id=author.get_id()) }}">
+            {{ author.name }}
+          </a>
+          {% endfor %}
+        </p>
+      </div>
+    </div>
+
+  </div>
+</div>
+{%- endmacro -%}
