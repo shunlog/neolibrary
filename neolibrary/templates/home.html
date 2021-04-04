@@ -1,11 +1,11 @@
 {% extends "layout.html" %}
 {% import 'book_card.html' as bk -%}
 {%block content %}
-<div class="row">
 
-  <div class="col-md-3">
-    <div class="content-section">
-      <h3>Discover</h3>
+<div class="content-section">
+  <h3>Discover</h3>
+  <div class="row">
+    <div class="col-md-3">
 
       <p class='text-muted'>New authors:
         <ul class="list-group">
@@ -17,6 +17,8 @@
           <li class="list-group-item list-group-item-light"><a href="google.com">more ...</a></li>
         </ul>
       </p>
+    </div>
+    <div class="col-md-3">
       <p class='text-muted'>New tags:
         <ul class="list-group">
           {% for tag in sidebar['tags'] %}
@@ -29,23 +31,24 @@
       </p>
     </div>
   </div>
+</div>
 
-  <div class="col-md-9 ">
-    {% for key in books_recommended %}
-    <h2>{{ key }}</h2>
+<div class="content-section">
+  {% for key in books_recommended %}
+  <h2>{{ key }}</h2>
 
-    {% if not books_recommended[key] %}
-    <p>Nothing here yet</p>
-    {% endif %}
+  {% if not books_recommended[key] %}
+  <p>Nothing here yet</p>
+  {% endif %}
 
-    <div class="row">
-      {% for book in books_recommended[key] %}
+  <div class="row">
+    {% for book in books_recommended[key] %}
 
-      {{  bk.book_card(book) }}
+    {{  bk.book_card(book) }}
 
-      {% endfor %}
-    </div>
     {% endfor %}
   </div>
+  {% endfor %}
+</div>
 
-  {% endblock content %}
+{% endblock content %}
