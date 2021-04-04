@@ -9,14 +9,21 @@ from neolibrary.books.utils import iter_pages, validate_page_number
 
 authors = Blueprint('authors', __name__)
 
+
 @authors.route("/author/<int:author_id>", methods=['GET'])
 def author(author_id):
     author = Author().match(graph).where("id(_)=%d" % author_id).first()
     if not author:
         return render_template('no_such_item.html', item="Author")
+
+    def url_for_page(page_num):
+        return url_for('authors.author', page=page_num,
+                       author_id=author_id)
+
     global book_covers_path
     if not book_covers_path:
         book_covers_path = url_for('static', filename=book_covers)
+
     page = request.args.get('page', 1, type=int)
     lim = Config.BOOKS_LIMIT
 
@@ -38,7 +45,8 @@ def author(author_id):
     return render_template('author.html', title="Details", author=author,
                            author_id=author_id, page_ls=page_ls,
                            current_page=page, books=books,
-                           book_covers_path=book_covers_path)
+                           book_covers_path=book_covers_path,
+                           url_for_page=url_for_page)
 
 
 

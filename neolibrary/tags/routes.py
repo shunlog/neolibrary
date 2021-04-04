@@ -14,6 +14,11 @@ def tag(tag_id):
     tag = Tag().match(graph).where("id(_)=%d"%tag_id).first()
     if not tag:
         return render_template('no_such_item.html', item="Tag")
+
+    def url_for_page(page_num):
+        return url_for('tags.tag', page=page_num,
+                       tag_id=tag_id)
+
     global book_covers_path
     if not book_covers_path:
         book_covers_path = url_for('static', filename=book_covers)
@@ -38,7 +43,8 @@ def tag(tag_id):
     return render_template('tag.html', title="Details", tag=tag,
                            tag_id=tag_id, page_ls=page_ls,
                            current_page=page, books=books,
-                           book_covers_path=book_covers_path)
+                           book_covers_path=book_covers_path,
+                           url_for_page=url_for_page)
 
 
 

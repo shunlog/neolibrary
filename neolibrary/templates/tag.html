@@ -20,7 +20,7 @@
 </div>
 
 {% if page_ls %}
-{{ ls.paginator_tag(page_ls, current_page, tag_id=tag_id) }}
+{{ ls.paginator(page_ls, current_page, url_for_page) }}
 {% endif %}
 
 <!-- Modal -->

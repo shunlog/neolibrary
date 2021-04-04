@@ -25,6 +25,10 @@ def search():
     page = request.args.get('page',1, type=int)
 
 
+    def url_for_page(page_num):
+        return url_for('search.search', page=page_num,
+                       search=search_str, select=select_str)
+
     if search.data['select'] == "Book":
         if search_str and search_str != '':
             search_regexp = str_to_regexp(search_str)
@@ -44,11 +48,13 @@ def search():
             dt = graph.run(query, search=search_regexp, limit=lim,
                            skip=(page-1)*lim)
             books = [Book.wrap(node[0]) for node in dt]
+
             if not books:
                 flash("Couldn't find any books matching that query","danger")
-            return render_template('search.html', books=books, form=search, book_covers_path=book_covers_path,
-                            title="Search", page_ls=page_ls, select = select_str,
-                            search=search_str, current_page=page)
+            return render_template('search.html', books=books, form=search,
+                                   book_covers_path=book_covers_path, title="Search",
+                                   page_ls=page_ls, current_page=page,
+                                   url_for_page=url_for_page)
 
     elif search.data['select'] == "Author":
         if search_str and search_str != '':
@@ -71,9 +77,9 @@ def search():
             authors = [Author.wrap(node[0]) for node in dt]
             if not authors:
                 flash("Couldn't find any authors matching that query","danger")
-            return render_template('search.html', form=search, title="Search", search=search_str,
+            return render_template('search.html', form=search, title="Search",
                                    authors=authors, page_ls=page_ls, current_page=page,
-                                   select=select_str)
+                                   url_for_page=url_for_page)
 
     elif search.data['select'] == "Tag":
         if search_str and search_str != '':
@@ -95,9 +101,9 @@ def search():
             tags = [Tag.wrap(node[0]) for node in dt]
             if not tags:
                 flash("Couldn't find any tags matching that query","danger")
-            return render_template('search.html', form=search, title="Search", search=search_str,
+            return render_template('search.html', form=search, title="Search",
                                    tags=tags, page_ls=page_ls, current_page=page,
-                                   select=select_str)
+                                   url_for_page=url_for_page)
 
     query = "match(b:Book) optional match (b)--(u:User) return b, count(u)\
             order by count(u) desc, b.title limit $limit"

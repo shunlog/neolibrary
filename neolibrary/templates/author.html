@@ -20,7 +20,7 @@
 </div>
 
 {% if page_ls %}
-{{ ls.paginator_author(page_ls, current_page, author_id=author_id) }}
+{{ ls.paginator(page_ls, current_page, url_for_page) }}
 {% endif %}
 
 <!-- Modal -->
