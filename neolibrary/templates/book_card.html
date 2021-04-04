@@ -19,25 +19,23 @@
     </div>
 
     <div class="card-body">
-      <div class="line-clamp-title">
-        <h5 ><a href="{{ url_for('books.book', book_id=book.get_id()) }}">
-            {% if book.name %}
-            {{ book.name }}
-            {% else %}
-            {{ book.title }}
-            {% endif %}
-        </a></h5>
-      </div>
-      <div class="line-clamp-authors">
-        <p>
-          By
-          {% for author in book.authors %}
-          <a href="{{ url_for('authors.author', author_id=author.get_id()) }}">
-            {{ author.name }}
-          </a>
-          {% endfor %}
-        </p>
-      </div>
+      <p class="book-title">
+        <a href="{{ url_for('books.book', book_id=book.get_id()) }}">
+          {% if book.name %}
+          {{ book.name }}
+          {% else %}
+          {{ book.title }}
+          {% endif %}
+        </a>
+      </p>
+      <p class="book-authors">
+        By
+        {% for author in book.authors %}
+        <a href="{{ url_for('authors.author', author_id=author.get_id()) }}">
+          {{ author.name }}
+        </a>
+        {% endfor %}
+      </p>
     </div>
 
   </div>

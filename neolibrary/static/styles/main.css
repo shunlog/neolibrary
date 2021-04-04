@@ -89,13 +89,15 @@ a.article-title:hover {
     overflow: hidden;
 }
 
-.line-clamp-title h5{
+.book-title {
+  font-size: 1.1rem;
   display: -webkit-box;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
-.line-clamp-authors p{
+
+.book-authors{
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
