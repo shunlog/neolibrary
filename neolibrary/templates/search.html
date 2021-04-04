@@ -13,52 +13,54 @@
 </form>
 
 
-{% if not page_ls %}
-<h4>Most popular</h4>
-{% endif %}
-{% if books %}
-<div class="row">
-  {% for book in books %}
-  {{ bk.book_card(book) }}
-  {% endfor%}
+<div class="content-section">
+  {% if not page_ls %}
+  <h4>Most popular</h4>
+  {% endif %}
+  {% if books %}
+  <div class="row">
+    {% for book in books %}
+    {{ bk.book_card(book) }}
+    {% endfor%}
 
-</div>
-{% elif authors %}
-<div class="col-md-4">
-  <ul class="list-group">
-    {% for author in authors %}
-    <a class="list-group-item list-group-item-action" href="{{ url_for('authors.author', author_id=author.get_id())}}">
-      {{ author.name }}
-      <span class="badge badge-primary badge-pill float-right">{{ author.book_count() }}</span>
-    </a>
-    {% endfor %}
-  </ul>
-</div>
-{% elif tags %}
-<div class="col-md-4">
-  <ul class="list-group">
-    {% for tag in tags %}
-    <a class="list-group-item list-group-item-action" href="{{ url_for('tags.tag', tag_id=tag.get_id())}}">
-      {{ tag.name }}
-      <span class="badge badge-primary badge-pill float-right">{{ tag.book_count() }}</span>
-    </a>
-    {% endfor %}
-  </ul>
-</div>
-{% endif %}
+  </div>
+  {% elif authors %}
+  <div class="col-md-4">
+    <ul class="list-group">
+      {% for author in authors %}
+      <a class="list-group-item list-group-item-action" href="{{ url_for('authors.author', author_id=author.get_id())}}">
+        {{ author.name }}
+        <span class="badge badge-primary badge-pill float-right">{{ author.book_count() }}</span>
+      </a>
+      {% endfor %}
+    </ul>
+  </div>
+  {% elif tags %}
+  <div class="col-md-4">
+    <ul class="list-group">
+      {% for tag in tags %}
+      <a class="list-group-item list-group-item-action" href="{{ url_for('tags.tag', tag_id=tag.get_id())}}">
+        {{ tag.name }}
+        <span class="badge badge-primary badge-pill float-right">{{ tag.book_count() }}</span>
+      </a>
+      {% endfor %}
+    </ul>
+  </div>
+  {% endif %}
 
-{% for page_num in page_ls %}
-{% if page_num %}
-{% if current_page == page_num %}
-<a class="btn btn-info mb-4 disabled" href="{{ url_for('search.search',
-                                            page=page_num, search=search, select=select)}}">{{ page_num }}</a>
-{% else %}
-<a class="btn btn-outline-info mb-4" href="{{ url_for('search.search',
-                                           page=page_num, search=search, select=select) }}">{{ page_num }}</a>
-{% endif %}
-{% else %}
-<a class="btn btn-outline-info mb-4 disabled">...</a>
-{% endif %}
-{% endfor %}
+  {% for page_num in page_ls %}
+  {% if page_num %}
+  {% if current_page == page_num %}
+  <a class="btn btn-info mb-4 disabled" href="{{ url_for('search.search',
+                                              page=page_num, search=search, select=select)}}">{{ page_num }}</a>
+  {% else %}
+  <a class="btn btn-outline-info mb-4" href="{{ url_for('search.search',
+                                             page=page_num, search=search, select=select) }}">{{ page_num }}</a>
+  {% endif %}
+  {% else %}
+  <a class="btn btn-outline-info mb-4 disabled">...</a>
+  {% endif %}
+  {% endfor %}
+</div>
 
 {% endblock content %}
