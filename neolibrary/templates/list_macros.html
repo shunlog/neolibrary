@@ -45,3 +45,27 @@
 </div>
 
 {% endmacro %}
+
+{% macro paginator_tag(page_ls, current_page, tag_id) -%}
+
+<div class="content-section">
+  {% for page_num in page_ls %}
+  {% if page_num %}
+  {% if current_page == page_num %}
+  <a class="btn btn-info mb-4 disabled"
+     href="{{ url_for('tags.tag', page=page_num, tag_id=tag_id)}}">
+    {{ page_num }}
+  </a>
+  {% else %}
+  <a class="btn btn-outline-info mb-4"
+     href="{{ url_for('tags.tag', page=page_num, tag_id=tag_id) }}">
+    {{ page_num }}
+  </a>
+  {% endif %}
+  {% else %}
+  <a class="btn btn-outline-info mb-4 disabled">...</a>
+  {% endif %}
+  {% endfor %}
+</div>
+
+{% endmacro %}

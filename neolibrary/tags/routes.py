@@ -1,22 +1,44 @@
+from math import ceil
 from flask import render_template, url_for, flash, redirect, request, Blueprint
 from flask import current_app as app
 from flask_login import current_user, login_required
-from neolibrary import graph, book_covers, book_covers_path
-from neolibrary.models import Tag
+from neolibrary import graph, book_covers, book_covers_path, Config
+from neolibrary.models import Tag, Book
 from neolibrary.tags.forms import TagForm
+from neolibrary.books.utils import iter_pages, validate_page_number
 
 tags = Blueprint('tags', __name__)
 
 @tags.route("/tag/<int:tag_id>")
 def tag(tag_id):
+    tag = Tag().match(graph).where("id(_)=%d"%tag_id).first()
+    if not tag:
+        return render_template('no_such_item.html', item="Tag")
     global book_covers_path
     if not book_covers_path:
         book_covers_path = url_for('static', filename=book_covers)
-    tag = Tag().match(graph).where("id(_)=%d"%tag_id).first()
-    if tag:
-        return render_template('tag.html', title="Details",tag=tag,
-                               tag_id=tag_id, book_covers_path=book_covers_path)
-    return render_template('no_such_item.html', item="Tag")
+    page = request.args.get('page', 1, type=int)
+    lim = Config.BOOKS_LIMIT
+
+    query = "match (b:Book)<--(a:Tag) where id(a)=$tag_id \
+    return count(b)"
+    dt = graph.run(query, tag_id=tag_id)
+    count = dt.evaluate()
+
+    pages = ceil(count/lim)
+    page = validate_page_number(page, pages)
+    page_ls = iter_pages(pages, page)
+
+    query_books = "match (b:Book)<--(a:Tag) where id(a)=$tag_id \
+    return b skip $skip limit $limit"
+    dt = graph.run(query_books,  tag_id=tag_id,
+                   limit=lim, skip=(page-1)*lim)
+    books = [Book.wrap(node[0]) for node in dt]
+
+    return render_template('tag.html', title="Details", tag=tag,
+                           tag_id=tag_id, page_ls=page_ls,
+                           current_page=page, books=books,
+                           book_covers_path=book_covers_path)
 
 
 
