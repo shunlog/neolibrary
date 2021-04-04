@@ -21,6 +21,7 @@ monotonic==1.5
 neotime==1.7.4
 packaging==20.9
 pansi==2020.7.3
+Pillow==8.1.2
 prompt-toolkit==2.0.10
 py2neo==2021.0.1
 pycparser==2.20
