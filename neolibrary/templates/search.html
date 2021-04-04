@@ -22,31 +22,35 @@
     {% for book in books %}
     {{ bk.book_card(book) }}
     {% endfor%}
-
   </div>
   {% elif authors %}
-  <div class="col-md-4">
-    <ul class="list-group">
+  <ul class="list-group">
+    <div class="row row-cols-2">
       {% for author in authors %}
-      <a class="list-group-item list-group-item-action" href="{{ url_for('authors.author', author_id=author.get_id())}}">
-        {{ author.name }}
-        <span class="badge badge-primary badge-pill float-right">{{ author.book_count() }}</span>
-      </a>
+      <div class="col">
+        <a class="list-group-item list-group-item-action" href="{{ url_for('authors.author', author_id=author.get_id())}}">
+          {{ author.name }}
+          <span class="badge badge-primary badge-pill float-right">{{ author.book_count() }}</span>
+        </a>
+      </div>
       {% endfor %}
-    </ul>
-  </div>
+    </div>
+  </ul>
   {% elif tags %}
-  <div class="col-md-4">
-    <ul class="list-group">
+  <ul class="list-group">
+    <div class="row row-cols-2">
       {% for tag in tags %}
-      <a class="list-group-item list-group-item-action" href="{{ url_for('tags.tag', tag_id=tag.get_id())}}">
-        {{ tag.name }}
-        <span class="badge badge-primary badge-pill float-right">{{ tag.book_count() }}</span>
-      </a>
+      <div class="col">
+        <a class="list-group-item list-group-item-action" href="{{ url_for('tags.tag', tag_id=tag.get_id())}}">
+          {{ tag.name }}
+          <span class="badge badge-primary badge-pill float-right">{{ tag.book_count() }}</span>
+        </a>
+      </div>
       {% endfor %}
-    </ul>
-  </div>
+    </div>
+  </ul>
   {% endif %}
+</div>
 
   {% for page_num in page_ls %}
   {% if page_num %}
