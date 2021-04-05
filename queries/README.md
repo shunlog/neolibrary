@@ -2,6 +2,7 @@ Some useful neo4j queries, all in one place
 
 
 Advanced search "AND"
+
 ``` sql
 // Advanced search "AND"
 // It is supposed to be used moularly, meaning, if the user
@@ -22,8 +23,7 @@ with b
 match (t:Tag)-[:TAGS]->(b)
 where t.name =~ 'a.*'
 
-return b
-limit 5
+return b limit 5
 ```
 
 Advanced search "OR"
@@ -52,3 +52,23 @@ where t.name =~ 'a.*'
 return b limit 5
 ```
 
+
+Mixed example
+
+``` sql
+match (b:Book)
+where b.name =~ 'W.*'
+
+return b limit 2 // OR
+union
+
+match (b)<-[:WROTE]-(a:Author)
+where a.name =~ 'A.*'
+
+with b // AND
+
+match (t:Tag)-[:TAGS]->(b)
+where t.name =~ 'a.*'
+
+return b limit 2
+```
