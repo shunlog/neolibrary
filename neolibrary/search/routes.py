@@ -61,8 +61,8 @@ def search():
             search_regexp = str_to_regexp(search_str)
             lim = Config.AUTHORS_LIMIT
 
-            query = "match (a:Author) where a.name=~$search \
-            return count(a)"
+            query = "match (:Book)<--(a:Author) where a.name=~$search \
+            with distinct a return count(a)"
             dt = graph.run(query, search=search_regexp)
             count = dt.evaluate()
 
@@ -70,7 +70,7 @@ def search():
             page = validate_page_number(page, pages)
             page_ls = iter_pages(pages, page)
 
-            query_authors = "match (a:Author) where a.name=~$search \
+            query_authors = "match (b:Book)<--(a:Author) where a.name=~$search \
             return a, count(b) order by count(b) desc skip $skip limit $limit"
             dt = graph.run(query_authors, search=search_regexp,
                            limit=lim, skip=(page-1)*lim)
@@ -86,15 +86,15 @@ def search():
             search_regexp = str_to_regexp(search_str)
             lim = Config.AUTHORS_LIMIT
 
-            query = "match (a:Tag) where a.name=~$search \
-            return count(a)"
+            query = "match (:Book)<--(a:Tag) where a.name=~$search \
+            with distinct a return count(a)"
             dt = graph.run(query, search=search_regexp)
             count = dt.evaluate()
             pages = ceil(count/lim)
             page = validate_page_number(page, pages)
             page_ls = iter_pages(pages, page)
 
-            query = "match (t:Tag) where t.name=~$search_regexp \
+            query = "match (b:Book)<--(t:Tag) where t.name=~$search_regexp \
             return t, count(b) order by count(b) desc skip $skip limit $limit"
             dt = graph.run(query, search_regexp=search_regexp,
                            limit=lim, skip=(page-1)*lim)
@@ -105,7 +105,7 @@ def search():
                                    tags=tags, page_ls=page_ls, current_page=page,
                                    url_for_page=url_for_page)
 
-    query = "match (b:Book) optional match (b)--(u:User) return b, count(u)\
+    query = "match(b:Book) optional match (b)--(u:User) return b, count(u)\
             order by count(u) desc, b.title limit $limit"
 
     dt = graph.run(query,limit=Config.BOOKS_LIMIT)
