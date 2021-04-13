@@ -1,8 +1,8 @@
 from string import ascii_lowercase as alpha
 
 
-def str_to_regexp(str):
-    regexp = str.replace('a', '[aâă]')\
+def string_to_regexp(string):
+    regexp = string.replace('a', '[aâă]')\
                 .replace('A', '[AÂĂ]')\
                 .replace('t', '[tț]')\
                 .replace('T', '[TȚ]')\
@@ -14,9 +14,9 @@ def str_to_regexp(str):
     return regexp
 
 
-def run_advanced_search(graph, ls, lim=None):
+def run_advanced_search(graph, pairs, lim=None):
     '''
-    ls - list of [LABEL, regexp_string]
+    pairs - list of [LABEL, regexp_string]
     LABEL - one of "Book", "Author", "Tag"
     return - string that is a valid cypher query
 
@@ -32,22 +32,24 @@ def run_advanced_search(graph, ls, lim=None):
         return b limit $lim
     '''
     query = ""
-    for index, (label, regexp) in enumerate(ls):
+    for index, (label, _) in enumerate(pairs):
         if label == "Book":
-            query += ("match (b:Book) where b.name=~${}"\
-                      +" with b \n").format(alpha[index])
+            query += ("match (b:Book) where b.name=~${}"
+                      + " with b \n").format(alpha[index])
         elif label == "Author":
-            query += ("match (a:Author)-[:WROTE]->(b:Book)"\
-                      +" where a.name=~${}"\
-                      +" with b \n").format(alpha[index])
+            query += ("match (a:Author)-[:WROTE]->(b:Book)"
+                      + " where a.name=~${}"
+                      + " with b \n").format(alpha[index])
         elif label == "Tag":
-            query += ("match (t:Tag)-[:TAGS]->(b:Book)"\
-                      +" where t.name=~${}"\
-                      +" with b \n").format(alpha[index])
+            query += ("match (t:Tag)-[:TAGS]->(b:Book)"
+                      + " where t.name=~${}"
+                      + " with b \n").format(alpha[index])
+
     query += "return b\n"
     if lim:
-         query += "limit $lim"
-    args = {letter: regexp for (letter,(label, regexp)) in zip(alpha, ls)}
-    dt = graph.run(query, args, lim=lim)
+        query += "limit $lim"
 
-    return dt
+    args = {letter: regexp for (letter, (label, regexp)) in zip(alpha, pairs)}
+    data = graph.run(query, args, lim=lim)
+
+    return data
