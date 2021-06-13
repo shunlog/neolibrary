@@ -6,7 +6,7 @@ from neolibrary import graph, book_covers, book_covers_path
 from neolibrary.models import Book, Author, User, Tag
 from neolibrary.config import Config
 from neolibrary.search.forms import SearchForm
-from neolibrary.search.utils import str_to_regexp
+from neolibrary.search.utils import string_to_regexp
 from neolibrary.books.utils import iter_pages, validate_page_number
 
 search_bl = Blueprint('search', __name__)
@@ -31,7 +31,7 @@ def search():
 
     if search.data['select'] == "Book":
         if search_str and search_str != '':
-            search_regexp = str_to_regexp(search_str)
+            search_regexp = string_to_regexp(search_str)
             lim = Config.BOOKS_LIMIT
 
             query = "match (b:Book) where b.name=~$search return count(b)"
@@ -58,7 +58,7 @@ def search():
 
     elif search.data['select'] == "Author":
         if search_str and search_str != '':
-            search_regexp = str_to_regexp(search_str)
+            search_regexp = string_to_regexp(search_str)
             lim = Config.AUTHORS_LIMIT
 
             query = "match (:Book)<--(a:Author) where a.name=~$search \
@@ -83,7 +83,7 @@ def search():
 
     elif search.data['select'] == "Tag":
         if search_str and search_str != '':
-            search_regexp = str_to_regexp(search_str)
+            search_regexp = string_to_regexp(search_str)
             lim = Config.AUTHORS_LIMIT
 
             query = "match (:Book)<--(a:Tag) where a.name=~$search \
@@ -119,8 +119,8 @@ def autocomplete():
         search_str_tags = request.form['search_tags']
         search_str_authors = request.form['search_authors']
 
-        search_regexp_tags = str_to_regexp(search_str_tags)
-        search_regexp_authors = str_to_regexp(search_str_authors)
+        search_regexp_tags = string_to_regexp(search_str_tags)
+        search_regexp_authors = string_to_regexp(search_str_authors)
 
         tags = Tag().match(graph).where('_.name =~ "{}"'.format(search_regexp_tags))
         tags_ls = []
